@@ -12,7 +12,9 @@ function App() {
         <nav>
           <ul className="nav-menu">
             <li>
-              <NavLink to="/">Home</NavLink>
+              <NavLink to="/" end>
+                Home
+              </NavLink>
             </li>
             <li>
               <NavLink to="/about">About</NavLink>
