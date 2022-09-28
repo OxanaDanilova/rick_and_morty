@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-import Home from './components/Home/Home';
-import About from './components/About/About';
-import NotFound from './components/NotFound/NotFound';
+import Home from './pages/Home/Home';
+import About from './pages/About/About';
+import NotFound from './pages/NotFound/NotFound';
 import './App.css';
 
 function App() {

@@ -1,3 +1,4 @@
+import SearchBar from 'components/SearchBar/SearchBar';
 import React, { Component } from 'react';
 
 export default class Home extends Component {
@@ -7,6 +8,9 @@ export default class Home extends Component {
         <header>
           <h1>Home</h1>
         </header>
+        <main>
+          <SearchBar />
+        </main>
       </>
     );
   }
