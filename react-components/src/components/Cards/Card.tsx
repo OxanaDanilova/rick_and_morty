@@ -1,4 +1,6 @@
 import React from 'react';
+import { BiLike } from 'react-icons/bi';
+import { BsEyeFill } from 'react-icons/bs';
 
 interface Props {
   image: string;
@@ -8,13 +10,25 @@ interface Props {
 export default function Card({ image, id }: Props) {
   return (
     <li className="card-wrapper">
-      <h3>Card {id + 1}</h3>
       <img className="card-pic" src={image} alt="Picture for card" />
-      <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consequuntur aperiam unde animi
-        reprehenderit tempora at quasi vel nostrum, suscipit eum saepe nihil laudantium corporis
-        nobis omnis expedita, est dolores quo?
+      <h4>Card {id + 1}</h4>
+      <p className="card-text">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias rerum facilis, veniam
+        mollitia quaerat vel iste quae eveniet voluptate sint.
       </p>
+      <p className="author">
+        Added by: <span> Author{id}</span>
+      </p>
+      <div className="card-footer">
+        <div className="like">
+          <BiLike />
+          115
+        </div>
+        <div className="view">
+          <BsEyeFill />
+          505
+        </div>
+      </div>
     </li>
   );
 }
