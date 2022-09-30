@@ -3,6 +3,6 @@ import React, { Component } from 'react';
 
 export default class NotFound extends Component {
   render() {
-    return <Header pageName="Page is not found" />;
+    return <Header pageName="Page not found" />;
   }
 }

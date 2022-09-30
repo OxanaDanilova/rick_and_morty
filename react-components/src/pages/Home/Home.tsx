@@ -7,7 +7,7 @@ export default class Home extends Component {
   render() {
     return (
       <>
-        <Header pageName="Home" />
+        <Header pageName="Home page" />
         <main>
           <SearchBar />
           <Cards />

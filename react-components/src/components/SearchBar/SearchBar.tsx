@@ -32,7 +32,6 @@ export default class SearchBar extends Component {
           placeholder="Search"
           onChange={(e) => {
             this.setState({ searchItem: e.target.value });
-            console.log('state from change input', this.state.searchItem);
           }}
         />
       </form>
