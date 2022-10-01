@@ -16,11 +16,11 @@ export default function Card({ image, id }: CardType) {
         Added by: <span> Author{id}</span>
       </p>
       <div className="card-footer">
-        <div className="like">
+        <div className="like" data-testid="like">
           <BiLike />
           115
         </div>
-        <div className="view">
+        <div className="view" data-testid="view">
           <BsEyeFill />
           505
         </div>
