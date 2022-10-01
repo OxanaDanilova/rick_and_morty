@@ -5,7 +5,7 @@ import CardType from 'types';
 
 export default function Card({ image, id }: CardType) {
   return (
-    <li className="card-wrapper">
+    <li className="card-wrapper" data-testid="card">
       <img className="card-pic" src={image} alt="Picture for card" />
       <h4>Card {id + 1}</h4>
       <p className="card-text">

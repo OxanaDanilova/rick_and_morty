@@ -6,7 +6,6 @@ import imgArr from 'data/data';
 
 export default class Home extends Component {
   render() {
-    console.log(imgArr);
     return (
       <>
         <Header pageName="Home page" />
