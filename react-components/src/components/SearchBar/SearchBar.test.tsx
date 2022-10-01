@@ -1,18 +1,9 @@
 import React from 'react';
-import { /* fireEvent, */ render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
 import SearchBar from './SearchBar';
-//import { notDeepEqual } from 'assert';
-//import SearchBar from './SearchBar';
-
-const mockLocalStorage = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-};
-
-Object.defineProperty(window, 'localStorage', { value: mockLocalStorage });
 
 describe('Search Bar', () => {
   it('check rendering of the Search Bar', () => {
@@ -21,29 +12,40 @@ describe('Search Bar', () => {
     expect(screen.getByPlaceholderText(/Search/i)).toBeInTheDocument();
   });
 
-  it('check LocalStorage after typing in SearchBar', async () => {
-    render(<SearchBar />);
-    const input = screen.getByPlaceholderText(/Search/i);
-    expect(input).toBeEmptyDOMElement();
-    userEvent.type(input, 'mytest');
-    expect(window.localStorage.setItem).not.toBeCalled();
-  });
-
-  it('check LocalStorage after typing in SearchBar and opening another page', () => {
+  it('check value in SearchBar after opening About page', () => {
     render(
       <Router>
         <App />
       </Router>
     );
     const input = screen.getByPlaceholderText(/Search/i);
-    const linkAbout = screen.getByText('About');
-    expect(input).toBeEmptyDOMElement();
+    const aboutPageLink = screen.getByTestId('aboutPageLink');
+    const homePageLink = screen.getByTestId('homePageLink');
     userEvent.type(input, 'RSSchool');
-    userEvent.click(linkAbout);
+    userEvent.click(aboutPageLink);
+    expect(input).not.toBeInTheDocument();
+    userEvent.click(homePageLink);
+    expect(screen.getByPlaceholderText(/Search/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Search/i)).toHaveDisplayValue('RSSchool');
+    userEvent.clear(input);
+  });
+});
+
+describe('LocalStorage for SearchBar', () => {
+  it('check LocalStorage after typing in SearchBar', async () => {
+    const localStorageMock = {
+      getItem: jest.fn(() => null),
+      setItem: jest.fn(() => null),
+    };
+    Object.defineProperty(window, 'localStorage', {
+      value: localStorageMock,
+    });
+    const { unmount } = render(<SearchBar />);
+    const input = screen.getByPlaceholderText(/Search/i);
+    userEvent.type(input, 'mytest');
+    expect(window.localStorage.setItem).not.toBeCalled();
+    unmount();
     expect(window.localStorage.setItem).toBeCalledTimes(1);
-    expect(screen.queryByDisplayValue(/RSSchool/i)).not.toBeInTheDocument();
-    userEvent.click(screen.getByText('Home'));
-    expect(screen.queryByDisplayValue(/RSSchool/i)).not.toBeInTheDocument();
-    expect(window.localStorage.getItem).toBeCalled();
+    expect(window.localStorage.setItem).toBeCalledWith('searchItem', 'mytest');
   });
 });

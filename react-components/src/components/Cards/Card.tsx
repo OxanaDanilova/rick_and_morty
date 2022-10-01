@@ -1,13 +1,9 @@
 import React from 'react';
 import { BiLike } from 'react-icons/bi';
 import { BsEyeFill } from 'react-icons/bs';
+import CardType from 'types';
 
-interface Props {
-  image: string;
-  id: number;
-}
-
-export default function Card({ image, id }: Props) {
+export default function Card({ image, id }: CardType) {
   return (
     <li className="card-wrapper">
       <img className="card-pic" src={image} alt="Picture for card" />
