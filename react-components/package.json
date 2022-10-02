@@ -34,9 +34,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --coverage",
     "eject": "react-scripts eject",
-    "clean": "rm -rf build",
-    "publish": "gh-pages -d build",
-    "deploy": "run-s clean build publish"
+    "predeploy": "npm run build",
+     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
