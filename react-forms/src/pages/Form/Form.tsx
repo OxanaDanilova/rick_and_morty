@@ -1,9 +1,10 @@
 import UserName from 'components/UserName/UserName';
-import React, { Component } from 'react';
+import React, { Component, ChangeEvent } from 'react';
 import './Form.css';
 
 type MyState = {
   firstName: string;
+  firstNameValid: boolean;
   secondName: string;
   dateOfBirth: string;
   country: string;
@@ -17,19 +18,42 @@ type MyProps = unknown;
 export default class Form extends Component<MyProps, MyState> {
   state: MyState = {
     firstName: '',
+    firstNameValid: true,
     secondName: '',
     dateOfBirth: '',
     country: '',
     gender: '',
     avatar: '',
     agreement: false,
-    submitDisabled: true,
+    submitDisabled: false,
   };
+  /*  inputFirstName = React.createRef<HTMLInputElement>();
+  inputLastName = React.createRef<HTMLInputElement>(); */
+
+  onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({ ...this.state, firstName: event.target.value });
+  };
+  onSubmitForm = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (this.state.firstName.length < 2) {
+      this.setState({ ...this.state, firstNameValid: false });
+    } else {
+      this.setState({ ...this.state, firstNameValid: true });
+    }
+  };
+
   render() {
     return (
-      <form id="createCardForm">
-        <UserName name="First Name" />
-        <UserName name="Second Name" />
+      <form id="createCardForm" onSubmit={(event: React.FormEvent) => this.onSubmitForm(event)}>
+        <UserName
+          label="First Name"
+          /* reference={this.inputFirstName} */
+          value={this.state.firstName}
+          isValid={this.state.firstNameValid}
+          errorMessage="Firstname schould contain more then 1 letter."
+          onChange={(event) => this.onChangeHandler(event)}
+        />
+        {/* <UserName label="Last Name" /> */}
         <label>Date of birth</label>
         <input type="date" name="dob" id="dob" />
         <label>Country</label>
