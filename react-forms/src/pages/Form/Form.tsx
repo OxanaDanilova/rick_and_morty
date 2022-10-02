@@ -1,14 +1,35 @@
+import UserName from 'components/UserName/UserName';
 import React, { Component } from 'react';
 import './Form.css';
 
-export default class Form extends Component {
+type MyState = {
+  firstName: string;
+  secondName: string;
+  dateOfBirth: string;
+  country: string;
+  gender: string;
+  avatar: string;
+  agreement: boolean;
+  submitDisabled: boolean;
+};
+type MyProps = unknown;
+
+export default class Form extends Component<MyProps, MyState> {
+  state: MyState = {
+    firstName: '',
+    secondName: '',
+    dateOfBirth: '',
+    country: '',
+    gender: '',
+    avatar: '',
+    agreement: false,
+    submitDisabled: true,
+  };
   render() {
     return (
-      <form>
-        <label>First name</label>
-        <input type="text" id="fname" />
-        <label>Second name</label>
-        <input type="text" id="fname" />
+      <form id="createCardForm">
+        <UserName name="First Name" />
+        <UserName name="Second Name" />
         <label>Date of birth</label>
         <input type="date" name="dob" id="dob" />
         <label>Country</label>
@@ -27,6 +48,8 @@ export default class Form extends Component {
         <input type="file" name="avatar" id="avatar" />
         <label htmlFor="user-agreement">I consent to my personal data</label>
         <input type="checkbox" name="user-agreement" id="user-agreement" />
+        <input type="submit" value="Create Card" disabled={this.state.submitDisabled} />
+        <input type="reset" value="Reset" />
       </form>
     );
   }

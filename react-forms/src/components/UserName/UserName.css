@@ -1,0 +1,17 @@
+#fname {
+  width: 50%;
+  height: 1.7rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  border: 1px solid royalblue;
+  box-shadow: 0.8rem 0.5rem 1rem grey;
+  padding-left: 0.8rem;
+}
+
+.firstNameWrapper {
+  width: 80%;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
