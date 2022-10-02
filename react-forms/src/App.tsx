@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import About from './pages/About/About';
+import Form from 'pages/Form/Form';
 import NotFound from './pages/NotFound/NotFound';
 import './App.css';
 
@@ -16,6 +17,11 @@ function App() {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/form" end data-testid="formPageLink">
+              Form
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/about" data-testid="aboutPageLink">
               About
             </NavLink>
@@ -24,6 +30,7 @@ function App() {
       </nav>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/form" element={<Form />} />
         <Route path="/about" element={<About />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>
