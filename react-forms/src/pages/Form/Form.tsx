@@ -1,4 +1,5 @@
 import Birthday from 'components/Birthday/Birthday';
+import Country from 'components/Country/Country';
 import UserName from 'components/UserName/UserName';
 import React, { Component } from 'react';
 import './Form.css';
@@ -8,7 +9,7 @@ type MyState = {
   firstNameValid: boolean;
   lastNameValid: boolean;
   birthdayValid: boolean;
-  country: string;
+  countryValid: boolean;
   gender: string;
   avatar: string;
   agreement: boolean;
@@ -22,7 +23,7 @@ export default class Form extends Component<MyProps, MyState> {
     firstNameValid: true,
     lastNameValid: true,
     birthdayValid: true,
-    country: '',
+    countryValid: true,
     gender: '',
     avatar: '',
     agreement: false,
@@ -31,6 +32,7 @@ export default class Form extends Component<MyProps, MyState> {
   inputFirstName = React.createRef<HTMLInputElement>();
   inputLastName = React.createRef<HTMLInputElement>();
   inputBirthday = React.createRef<HTMLInputElement>();
+  selectCountry = React.createRef<HTMLSelectElement>();
 
   /*  onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ ...this.state, firstName: event.target.value });
@@ -49,10 +51,18 @@ export default class Form extends Component<MyProps, MyState> {
     } else {
       await this.setState({ ...this.state, lastNameValid: true });
     }
-    if (this.inputBirthday.current && new Date(this.inputBirthday.current.value) > new Date()) {
+    if (
+      (this.inputBirthday.current && new Date(this.inputBirthday.current.value) > new Date()) ||
+      (this.inputBirthday.current && !this.inputBirthday.current.value)
+    ) {
       await this.setState({ ...this.state, birthdayValid: false });
     } else {
       await this.setState({ ...this.state, birthdayValid: true });
+    }
+    if (this.selectCountry.current && !this.selectCountry.current.value.trim()) {
+      await this.setState({ ...this.state, countryValid: false });
+    } else {
+      await this.setState({ ...this.state, countryValid: true });
     }
   };
 
@@ -60,7 +70,8 @@ export default class Form extends Component<MyProps, MyState> {
     if (
       (this.inputFirstName.current && this.inputFirstName.current.value.trim()) ||
       (this.inputLastName.current && this.inputLastName.current.value.trim()) ||
-      (this.inputBirthday.current && this.inputBirthday.current.value.trim())
+      (this.inputBirthday.current && this.inputBirthday.current.value.trim()) ||
+      (this.selectCountry.current && this.selectCountry.current.value.trim())
     ) {
       this.setState({ ...this.state, submitDisabled: false });
     }
@@ -92,16 +103,13 @@ export default class Form extends Component<MyProps, MyState> {
         <Birthday
           reference={this.inputBirthday}
           isValid={this.state.birthdayValid}
-          errorMessage="Birthday must be before the current date."
+          errorMessage="This field is required and must be before the current date."
         />
-        <label>Country</label>
-        <select>
-          <option>Germany</option>
-          <option>Kasachstan</option>
-          <option>Russia</option>
-          <option>China</option>
-          <option>Spain</option>
-        </select>
+        <Country
+          reference={this.selectCountry}
+          errorMessage="This field is required."
+          isValid={this.state.countryValid}
+        />
         <label className="switch">
           Male
           <input type="checkbox" name="gender" id="gender" />
