@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component } from 'react';
+import React, { Component } from 'react';
 import './UserName.css';
 
 interface MyProps {
@@ -13,14 +13,16 @@ interface MyProps {
 export default class UserName extends Component<MyProps> {
   render() {
     return (
-      <div className="firstNameWrapper">
+      <div className="nameWrapper">
         <label>{this.props.label}</label>
-        <input
-          ref={this.props.reference}
-          type="text"
-          id="fname" /* value={this.props.value} onChange={this.props.onChange} */
-        />
-        {!this.props.isValid && <p>{this.props.errorMessage}</p>}
+        <div className="input-wrapper">
+          <input
+            ref={this.props.reference}
+            type="text"
+            id="fname" /* value={this.props.value} onChange={this.props.onChange} */
+          />
+          {!this.props.isValid && <p className="er-mes">{this.props.errorMessage}</p>}
+        </div>
       </div>
     );
   }

@@ -1,12 +1,13 @@
+import Birthday from 'components/Birthday/Birthday';
 import UserName from 'components/UserName/UserName';
-import React, { Component, ChangeEvent } from 'react';
+import React, { Component } from 'react';
 import './Form.css';
 
 type MyState = {
-  firstName: string;
+  isFormEdited: boolean;
   firstNameValid: boolean;
-  secondName: string;
-  dateOfBirth: string;
+  lastNameValid: boolean;
+  birthdayValid: boolean;
   country: string;
   gender: string;
   avatar: string;
@@ -17,46 +18,82 @@ type MyProps = unknown;
 
 export default class Form extends Component<MyProps, MyState> {
   state: MyState = {
-    firstName: '',
+    isFormEdited: false,
     firstNameValid: true,
-    secondName: '',
-    dateOfBirth: '',
+    lastNameValid: true,
+    birthdayValid: true,
     country: '',
     gender: '',
     avatar: '',
     agreement: false,
-    submitDisabled: false,
+    submitDisabled: true,
   };
   inputFirstName = React.createRef<HTMLInputElement>();
-  /*inputLastName = React.createRef<HTMLInputElement>(); */
+  inputLastName = React.createRef<HTMLInputElement>();
+  inputBirthday = React.createRef<HTMLInputElement>();
 
-  onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+  /*  onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ ...this.state, firstName: event.target.value });
-  };
-  onSubmitForm = (event: React.FormEvent) => {
+  }; */
+  onSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault();
     //console.log('magiiya', this.inputFirstName.current.value);
-    if (this.inputFirstName.current && this.inputFirstName.current.value.length < 2) {
-      this.setState({ ...this.state, firstNameValid: false });
+    if (this.inputFirstName.current && this.inputFirstName.current.value.trim().length < 2) {
+      await this.setState({ ...this.state, firstNameValid: false });
     } else {
-      this.setState({ ...this.state, firstNameValid: true });
+      await this.setState({ ...this.state, firstNameValid: true });
+    }
+
+    if (this.inputLastName.current && this.inputLastName.current.value.trim().length < 2) {
+      await this.setState({ ...this.state, lastNameValid: false });
+    } else {
+      await this.setState({ ...this.state, lastNameValid: true });
+    }
+    if (this.inputBirthday.current && new Date(this.inputBirthday.current.value) > new Date()) {
+      await this.setState({ ...this.state, birthdayValid: false });
+    } else {
+      await this.setState({ ...this.state, birthdayValid: true });
+    }
+  };
+
+  onChangeForm = () => {
+    if (
+      (this.inputFirstName.current && this.inputFirstName.current.value.trim()) ||
+      (this.inputLastName.current && this.inputLastName.current.value.trim()) ||
+      (this.inputBirthday.current && this.inputBirthday.current.value.trim())
+    ) {
+      this.setState({ ...this.state, submitDisabled: false });
     }
   };
 
   render() {
     return (
-      <form id="createCardForm" onSubmit={(event: React.FormEvent) => this.onSubmitForm(event)}>
+      <form
+        id="createCardForm"
+        onChange={this.onChangeForm}
+        onSubmit={(event: React.FormEvent) => this.onSubmitForm(event)}
+      >
         <UserName
           label="First Name"
           reference={this.inputFirstName}
           //value={this.state.firstName}
           isValid={this.state.firstNameValid}
-          errorMessage="Firstname schould contain more then 1 letter."
+          errorMessage="First Name schould contain more then 1 letter."
           //onChange={(event) => this.onChangeHandler(event)}
         />
-        {/* <UserName label="Last Name" /> */}
-        <label>Date of birth</label>
-        <input type="date" name="dob" id="dob" />
+        <UserName
+          label="Last Name"
+          reference={this.inputLastName}
+          //value={this.state.firstName}
+          isValid={this.state.lastNameValid}
+          errorMessage="Last Name schould contain more then 1 letter."
+          //onChange={(event) => this.onChangeHandler(event)}
+        />
+        <Birthday
+          reference={this.inputBirthday}
+          isValid={this.state.birthdayValid}
+          errorMessage="Birthday must be before the current date."
+        />
         <label>Country</label>
         <select>
           <option>Germany</option>
