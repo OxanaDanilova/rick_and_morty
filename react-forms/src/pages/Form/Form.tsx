@@ -27,15 +27,16 @@ export default class Form extends Component<MyProps, MyState> {
     agreement: false,
     submitDisabled: false,
   };
-  /*  inputFirstName = React.createRef<HTMLInputElement>();
-  inputLastName = React.createRef<HTMLInputElement>(); */
+  inputFirstName = React.createRef<HTMLInputElement>();
+  /*inputLastName = React.createRef<HTMLInputElement>(); */
 
   onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ ...this.state, firstName: event.target.value });
   };
   onSubmitForm = (event: React.FormEvent) => {
     event.preventDefault();
-    if (this.state.firstName.length < 2) {
+    //console.log('magiiya', this.inputFirstName.current.value);
+    if (this.inputFirstName.current && this.inputFirstName.current.value.length < 2) {
       this.setState({ ...this.state, firstNameValid: false });
     } else {
       this.setState({ ...this.state, firstNameValid: true });
@@ -47,11 +48,11 @@ export default class Form extends Component<MyProps, MyState> {
       <form id="createCardForm" onSubmit={(event: React.FormEvent) => this.onSubmitForm(event)}>
         <UserName
           label="First Name"
-          /* reference={this.inputFirstName} */
-          value={this.state.firstName}
+          reference={this.inputFirstName}
+          //value={this.state.firstName}
           isValid={this.state.firstNameValid}
           errorMessage="Firstname schould contain more then 1 letter."
-          onChange={(event) => this.onChangeHandler(event)}
+          //onChange={(event) => this.onChangeHandler(event)}
         />
         {/* <UserName label="Last Name" /> */}
         <label>Date of birth</label>
