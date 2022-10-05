@@ -1,5 +1,6 @@
 import Birthday from 'components/Birthday/Birthday';
 import Country from 'components/Country/Country';
+import Gender from 'components/Gender/Gender';
 import UserName from 'components/UserName/UserName';
 import React, { Component } from 'react';
 import './Form.css';
@@ -33,6 +34,7 @@ export default class Form extends Component<MyProps, MyState> {
   inputLastName = React.createRef<HTMLInputElement>();
   inputBirthday = React.createRef<HTMLInputElement>();
   selectCountry = React.createRef<HTMLSelectElement>();
+  inputGender = React.createRef<HTMLInputElement>();
 
   /*  onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ ...this.state, firstName: event.target.value });
@@ -71,7 +73,8 @@ export default class Form extends Component<MyProps, MyState> {
       (this.inputFirstName.current && this.inputFirstName.current.value.trim()) ||
       (this.inputLastName.current && this.inputLastName.current.value.trim()) ||
       (this.inputBirthday.current && this.inputBirthday.current.value.trim()) ||
-      (this.selectCountry.current && this.selectCountry.current.value.trim())
+      (this.selectCountry.current && this.selectCountry.current.value.trim()) ||
+      (this.inputGender.current && this.inputGender.current.value.trim())
     ) {
       this.setState({ ...this.state, submitDisabled: false });
     }
@@ -103,18 +106,14 @@ export default class Form extends Component<MyProps, MyState> {
         <Birthday
           reference={this.inputBirthday}
           isValid={this.state.birthdayValid}
-          errorMessage="This field is required and must be before the current date."
+          errorMessage="Birthday must be before the current date."
         />
         <Country
           reference={this.selectCountry}
           errorMessage="This field is required."
           isValid={this.state.countryValid}
         />
-        <label className="switch">
-          Male
-          <input type="checkbox" name="gender" id="gender" />
-          <span className="slider round"></span>Female
-        </label>
+        <Gender reference={this.inputGender} />
         <input type="file" name="avatar" id="avatar" />
         <label htmlFor="user-agreement">I consent to my personal data</label>
         <input type="checkbox" name="user-agreement" id="user-agreement" />
