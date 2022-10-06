@@ -1,3 +1,4 @@
+import Avatar from 'components/Avatar/Avatar';
 import Birthday from 'components/Birthday/Birthday';
 import Country from 'components/Country/Country';
 import Gender from 'components/Gender/Gender';
@@ -11,8 +12,7 @@ type MyState = {
   lastNameValid: boolean;
   birthdayValid: boolean;
   countryValid: boolean;
-  gender: string;
-  avatar: string;
+  avatarValid: boolean;
   agreement: boolean;
   submitDisabled: boolean;
 };
@@ -25,8 +25,7 @@ export default class Form extends Component<MyProps, MyState> {
     lastNameValid: true,
     birthdayValid: true,
     countryValid: true,
-    gender: '',
-    avatar: '',
+    avatarValid: true,
     agreement: false,
     submitDisabled: true,
   };
@@ -35,6 +34,7 @@ export default class Form extends Component<MyProps, MyState> {
   inputBirthday = React.createRef<HTMLInputElement>();
   selectCountry = React.createRef<HTMLSelectElement>();
   inputGender = React.createRef<HTMLInputElement>();
+  inputAvatar = React.createRef<HTMLInputElement>();
 
   /*  onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ ...this.state, firstName: event.target.value });
@@ -66,6 +66,11 @@ export default class Form extends Component<MyProps, MyState> {
     } else {
       await this.setState({ ...this.state, countryValid: true });
     }
+    if (this.inputAvatar.current && !this.inputAvatar.current.value.trim()) {
+      await this.setState({ ...this.state, avatarValid: false });
+    } else {
+      await this.setState({ ...this.state, avatarValid: true });
+    }
   };
 
   onChangeForm = () => {
@@ -74,7 +79,8 @@ export default class Form extends Component<MyProps, MyState> {
       (this.inputLastName.current && this.inputLastName.current.value.trim()) ||
       (this.inputBirthday.current && this.inputBirthday.current.value.trim()) ||
       (this.selectCountry.current && this.selectCountry.current.value.trim()) ||
-      (this.inputGender.current && this.inputGender.current.value.trim())
+      (this.inputGender.current && this.inputGender.current.value.trim()) ||
+      (this.inputAvatar.current && this.inputAvatar.current.value.trim())
     ) {
       this.setState({ ...this.state, submitDisabled: false });
     }
@@ -114,7 +120,11 @@ export default class Form extends Component<MyProps, MyState> {
           isValid={this.state.countryValid}
         />
         <Gender reference={this.inputGender} />
-        <input type="file" name="avatar" id="avatar" />
+        <Avatar
+          reference={this.inputAvatar}
+          isValid={this.state.avatarValid}
+          errorMessage="Add your avatar please."
+        />
         <label htmlFor="user-agreement">I consent to my personal data</label>
         <input type="checkbox" name="user-agreement" id="user-agreement" />
         <input type="submit" value="Create Card" disabled={this.state.submitDisabled} />
