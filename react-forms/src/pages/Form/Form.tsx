@@ -42,56 +42,84 @@ export default class Form extends Component<MyProps, MyState> {
   /*  onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ ...this.state, firstName: event.target.value });
   }; */
-  onSubmitForm = async (event: React.FormEvent) => {
-    event.preventDefault();
-    //console.log('magiiya', this.inputFirstName.current.value);
+  validationForm = async () => {
     if (this.inputFirstName.current && this.inputFirstName.current.value.trim().length < 2) {
-      await this.setState({ ...this.state, firstNameValid: false });
+      await this.setState({ ...this.state, firstNameValid: false, submitDisabled: true });
     } else {
-      await this.setState({ ...this.state, firstNameValid: true });
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          firstNameValid: true,
+          submitDisabled: false,
+        };
+      });
+      //await this.setState({ ...this.state, firstNameValid: true, submitDisabled: false });
     }
 
     if (this.inputLastName.current && this.inputLastName.current.value.trim().length < 2) {
-      await this.setState({ ...this.state, lastNameValid: false });
+      await this.setState({ ...this.state, lastNameValid: false, submitDisabled: true });
     } else {
-      await this.setState({ ...this.state, lastNameValid: true });
+      await this.setState({ ...this.state, lastNameValid: true, submitDisabled: false });
     }
     if (
       (this.inputBirthday.current && new Date(this.inputBirthday.current.value) > new Date()) ||
       (this.inputBirthday.current && !this.inputBirthday.current.value)
     ) {
-      await this.setState({ ...this.state, birthdayValid: false });
+      await this.setState({ ...this.state, birthdayValid: false, submitDisabled: true });
     } else {
-      await this.setState({ ...this.state, birthdayValid: true });
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          birthdayValid: false,
+          submitDisabled: true,
+        };
+      });
+      //await this.setState({ ...this.state, birthdayValid: true, submitDisabled: false });
     }
     if (this.selectCountry.current && !this.selectCountry.current.value.trim()) {
-      await this.setState({ ...this.state, countryValid: false });
+      await this.setState({ ...this.state, countryValid: false, submitDisabled: true });
     } else {
       await this.setState({ ...this.state, countryValid: true });
     }
     if (this.inputAvatar.current && !this.inputAvatar.current.value) {
-      await this.setState({ ...this.state, avatarValid: false });
+      await this.setState({ ...this.state, avatarValid: false, submitDisabled: true });
     } else {
       await this.setState({ ...this.state, avatarValid: true });
     }
     if (this.checkboxAgreement.current && !this.checkboxAgreement.current.checked) {
-      await this.setState({ ...this.state, agreement: false });
+      await this.setState({ ...this.state, agreement: false, submitDisabled: true });
     } else {
       await this.setState({ ...this.state, agreement: true });
     }
+    console.log('her vam', this.state.birthdayValid);
   };
 
-  onChangeForm = () => {
+  onSubmitForm = async (event: React.FormEvent) => {
+    event.preventDefault();
+    this.validationForm();
+  };
+
+  onChangeForm = async () => {
+    if (this.state.submitDisabled && this.state.isFormEdited) {
+      console.log('i am here');
+      await this.validationForm();
+    }
     if (
-      (this.inputFirstName.current && this.inputFirstName.current.value.trim()) ||
-      (this.inputLastName.current && this.inputLastName.current.value.trim()) ||
-      (this.inputBirthday.current && this.inputBirthday.current.value.trim()) ||
-      (this.selectCountry.current && this.selectCountry.current.value.trim()) ||
-      (this.inputGender.current && this.inputGender.current.value.trim()) ||
-      (this.inputAvatar.current && this.inputAvatar.current.value) ||
-      (this.checkboxAgreement.current && this.checkboxAgreement.current.value)
+      this.state.firstNameValid &&
+      this.state.lastNameValid &&
+      this.state.birthdayValid &&
+      this.state.countryValid &&
+      this.state.avatarValid &&
+      this.state.agreement &&
+      ((this.inputFirstName.current && this.inputFirstName.current.value.trim()) ||
+        (this.inputLastName.current && this.inputLastName.current.value.trim()) ||
+        (this.inputBirthday.current && this.inputBirthday.current.value.trim()) ||
+        (this.selectCountry.current && this.selectCountry.current.value.trim()) ||
+        (this.inputGender.current && this.inputGender.current.value.trim()) ||
+        (this.inputAvatar.current && this.inputAvatar.current.value) ||
+        (this.checkboxAgreement.current && this.checkboxAgreement.current.value))
     ) {
-      this.setState({ ...this.state, submitDisabled: false });
+      this.setState({ ...this.state, isFormEdited: true, submitDisabled: false });
     }
   };
 
@@ -101,6 +129,18 @@ export default class Form extends Component<MyProps, MyState> {
         id="createCardForm"
         onChange={this.onChangeForm}
         onSubmit={(event: React.FormEvent) => this.onSubmitForm(event)}
+        onReset={() =>
+          this.setState({
+            isFormEdited: false,
+            firstNameValid: true,
+            lastNameValid: true,
+            birthdayValid: true,
+            countryValid: true,
+            avatarValid: true,
+            agreement: true,
+            submitDisabled: true,
+          })
+        }
       >
         <UserName
           label="First Name"
