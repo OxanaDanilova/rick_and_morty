@@ -6,6 +6,7 @@ import UserName from 'components/UserName/UserName';
 import Agreement from 'components/Agreement/Agreement';
 import React, { Component } from 'react';
 import './Form.css';
+import FormButtons from 'components/FormButtons/FormButtons';
 
 type MyState = {
   isFormEdited: boolean;
@@ -138,8 +139,7 @@ export default class Form extends Component<MyProps, MyState> {
           isValid={this.state.agreement}
           errorMessage="This field is required."
         />
-        <input type="submit" value="Create Card" disabled={this.state.submitDisabled} />
-        <input type="reset" value="Reset" />
+        <FormButtons disabled={this.state.submitDisabled} />
       </form>
     );
   }
