@@ -1,0 +1,34 @@
+import React, { Component } from 'react';
+import FormCard from '../../components/FormCard/FormCard';
+import Form from './Form';
+
+interface Card {
+  firstName: string;
+  lastName: string;
+  birthday: string;
+  country: string;
+  avatar: string;
+}
+
+type MyState = {
+  cards: Card[];
+};
+export default class FormPage extends Component<unknown, MyState> {
+  state: MyState = {
+    cards: [],
+  };
+  createCard = (card: Card) => {
+    const formCards = this.state.cards;
+    formCards.push(card);
+    this.setState({ cards: formCards });
+  };
+  render() {
+    return (
+      <div>
+        <Form createCard={this.createCard} />
+        {this.state.cards.length &&
+          this.state.cards.map((formCard, id) => <FormCard key={id} card={formCard} />)}
+      </div>
+    );
+  }
+}

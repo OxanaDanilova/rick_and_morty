@@ -8,6 +8,14 @@ import React, { Component } from 'react';
 import './Form.css';
 import FormButtons from 'components/FormButtons/FormButtons';
 
+interface Card {
+  firstName: string;
+  lastName: string;
+  birthday: string;
+  country: string;
+  avatar: string;
+}
+
 type MyState = {
   isFormEdited: boolean;
   firstNameValid: boolean;
@@ -18,7 +26,9 @@ type MyState = {
   agreement: boolean;
   submitDisabled: boolean;
 };
-type MyProps = unknown;
+type MyProps = {
+  createCard: (card: Card) => void;
+};
 
 export default class Form extends Component<MyProps, MyState> {
   state: MyState = {
@@ -43,66 +53,87 @@ export default class Form extends Component<MyProps, MyState> {
     this.setState({ ...this.state, firstName: event.target.value });
   }; */
   validationForm = async () => {
+    let isFormValid = true;
     if (this.inputFirstName.current && this.inputFirstName.current.value.trim().length < 2) {
       await this.setState({ ...this.state, firstNameValid: false, submitDisabled: true });
+      isFormValid = false;
     } else {
-      this.setState((prevState) => {
+      /* this.setState((prevState) => {
         return {
           ...prevState,
           firstNameValid: true,
           submitDisabled: false,
         };
-      });
-      //await this.setState({ ...this.state, firstNameValid: true, submitDisabled: false });
+      }); */
+      await this.setState({ ...this.state, firstNameValid: true });
     }
 
     if (this.inputLastName.current && this.inputLastName.current.value.trim().length < 2) {
       await this.setState({ ...this.state, lastNameValid: false, submitDisabled: true });
+      isFormValid = false;
     } else {
-      await this.setState({ ...this.state, lastNameValid: true, submitDisabled: false });
+      await this.setState({ ...this.state, lastNameValid: true });
     }
     if (
       (this.inputBirthday.current && new Date(this.inputBirthday.current.value) > new Date()) ||
       (this.inputBirthday.current && !this.inputBirthday.current.value)
     ) {
       await this.setState({ ...this.state, birthdayValid: false, submitDisabled: true });
+      isFormValid = false;
     } else {
-      this.setState((prevState) => {
-        return {
-          ...prevState,
-          birthdayValid: false,
-          submitDisabled: true,
-        };
-      });
-      //await this.setState({ ...this.state, birthdayValid: true, submitDisabled: false });
+      await this.setState({ ...this.state, birthdayValid: true });
     }
     if (this.selectCountry.current && !this.selectCountry.current.value.trim()) {
       await this.setState({ ...this.state, countryValid: false, submitDisabled: true });
+      isFormValid = false;
     } else {
       await this.setState({ ...this.state, countryValid: true });
     }
     if (this.inputAvatar.current && !this.inputAvatar.current.value) {
       await this.setState({ ...this.state, avatarValid: false, submitDisabled: true });
+      isFormValid = false;
     } else {
       await this.setState({ ...this.state, avatarValid: true });
     }
     if (this.checkboxAgreement.current && !this.checkboxAgreement.current.checked) {
       await this.setState({ ...this.state, agreement: false, submitDisabled: true });
+      isFormValid = false;
     } else {
       await this.setState({ ...this.state, agreement: true });
     }
-    console.log('her vam', this.state.birthdayValid);
+
+    return isFormValid;
   };
 
   onSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault();
-    this.validationForm();
+    if (await this.validationForm()) {
+      this.setState({ ...this.state, submitDisabled: false });
+      if (
+        this.inputAvatar.current &&
+        this.inputAvatar.current.files &&
+        this.inputFirstName.current &&
+        this.inputLastName.current &&
+        this.inputBirthday.current &&
+        this.selectCountry.current
+      ) {
+        const avatar = URL.createObjectURL(this.inputAvatar.current.files[0]);
+        this.props.createCard({
+          firstName: this.inputFirstName.current.value,
+          lastName: this.inputLastName.current.value,
+          birthday: this.inputBirthday.current.value,
+          country: this.selectCountry.current.value,
+          avatar: avatar,
+        });
+      }
+    }
   };
 
   onChangeForm = async () => {
     if (this.state.submitDisabled && this.state.isFormEdited) {
-      console.log('i am here');
-      await this.validationForm();
+      if (await this.validationForm()) {
+        this.setState({ ...this.state, submitDisabled: false });
+      }
     }
     if (
       this.state.firstNameValid &&
@@ -145,18 +176,14 @@ export default class Form extends Component<MyProps, MyState> {
         <UserName
           label="First Name"
           reference={this.inputFirstName}
-          //value={this.state.firstName}
           isValid={this.state.firstNameValid}
-          errorMessage="First Name schould contain more then 1 letter."
-          //onChange={(event) => this.onChangeHandler(event)}
+          errorMessage="First Name schould contain more than 1 letter."
         />
         <UserName
           label="Last Name"
           reference={this.inputLastName}
-          //value={this.state.firstName}
           isValid={this.state.lastNameValid}
-          errorMessage="Last Name schould contain more then 1 letter."
-          //onChange={(event) => this.onChangeHandler(event)}
+          errorMessage=" Last Name schould contain more than 1 letter."
         />
         <Birthday
           reference={this.inputBirthday}
