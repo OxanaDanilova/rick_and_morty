@@ -11,7 +11,13 @@ export default class Avatar extends Component<MyProps> {
   render() {
     return (
       <div className="avatar-wrapper">
-        <input type="file" name="avatar" id="avatar" ref={this.props.reference} />
+        <input
+          data-testid="avatar"
+          type="file"
+          name="avatar"
+          id="avatar"
+          ref={this.props.reference}
+        />
         {!this.props.isValid && <p className="er-mes">{this.props.errorMessage}</p>}
       </div>
     );
