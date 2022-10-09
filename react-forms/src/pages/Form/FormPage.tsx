@@ -8,6 +8,7 @@ interface Card {
   birthday: string;
   country: string;
   avatar: string;
+  gender: string;
 }
 
 type MyState = {

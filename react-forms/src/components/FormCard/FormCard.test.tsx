@@ -9,6 +9,7 @@ describe('Check FormCard', () => {
       lastName: 'Bob',
       birthday: '05/05/2000',
       country: 'USA',
+      gender: 'Male',
       avatar:
         'https://play-lh.googleusercontent.com/ZqSUbqjoUmb-2MpPNkzvh9O0jBiOffhdocrZRwZ2Jliwy3TJ8DawPvjZx_AonSiw7e5p',
     };
@@ -19,6 +20,7 @@ describe('Check FormCard', () => {
     const lname = screen.getByText('Last Name:');
     const bday = screen.getByText('Birthday:');
     const country = screen.getByText('Country:');
+    const gender = screen.getByText('Gender:');
     expect(formCard).toBeInTheDocument();
     expect(formCard).toHaveClass('card-wrapper');
     expect(fname).toBeInTheDocument();
@@ -28,6 +30,8 @@ describe('Check FormCard', () => {
     expect(bday).toBeInTheDocument();
     expect(screen.getByText('05/05/2000')).toBeInTheDocument;
     expect(country).toBeInTheDocument();
+    expect(gender).toBeInTheDocument();
+    expect(screen.getByText(/Male/i)).toBeInTheDocument;
     expect(screen.getByText('USA')).toBeInTheDocument;
     expect(screen.getByAltText('User avatar')).toBeInTheDocument;
   });

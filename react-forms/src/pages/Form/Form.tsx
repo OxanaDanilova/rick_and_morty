@@ -14,6 +14,7 @@ interface Card {
   birthday: string;
   country: string;
   avatar: string;
+  gender: string;
 }
 
 type MyState = {
@@ -51,9 +52,6 @@ export default class Form extends Component<MyProps, MyState> {
   inputAvatar = React.createRef<HTMLInputElement>();
   checkboxAgreement = React.createRef<HTMLInputElement>();
 
-  /*  onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ ...this.state, firstName: event.target.value });
-  }; */
   validationForm = async (event: React.FormEvent) => {
     switch (event.target) {
       case this.inputFirstName.current: {
@@ -299,6 +297,7 @@ export default class Form extends Component<MyProps, MyState> {
         this.inputFirstName.current &&
         this.inputLastName.current &&
         this.inputBirthday.current &&
+        this.inputGender.current &&
         this.selectCountry.current
       ) {
         const avatar = URL.createObjectURL(this.inputAvatar.current.files[0]);
@@ -307,6 +306,7 @@ export default class Form extends Component<MyProps, MyState> {
           lastName: this.inputLastName.current.value,
           birthday: this.inputBirthday.current.value,
           country: this.selectCountry.current.value,
+          gender: this.inputGender.current.checked ? 'Female' : 'Male',
           avatar: avatar,
         });
         this.myForm.current && this.myForm.current.reset();
@@ -325,7 +325,7 @@ export default class Form extends Component<MyProps, MyState> {
   };
 
   onChangeForm = async (event: React.FormEvent) => {
-    if (this.state.isFormEdited) {
+    if (this.state.isFormEdited && this.state.submitDisabled) {
       if (await this.validationForm(event)) {
         this.setState({ ...this.state, submitDisabled: false });
       }

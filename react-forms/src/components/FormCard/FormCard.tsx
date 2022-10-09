@@ -8,6 +8,7 @@ interface MyProps {
     birthday: string;
     country: string;
     avatar: string;
+    gender: string;
   };
 }
 
@@ -23,6 +24,9 @@ export default function FormCard({ card }: MyProps) {
       </p>
       <p data-testid="bdcard">
         Birthday: <span>{card.birthday}</span>
+      </p>
+      <p>
+        Gender: <span>{card.gender}</span>
       </p>
       <p>
         Country: <span>{card.country}</span>
