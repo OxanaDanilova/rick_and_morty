@@ -54,62 +54,244 @@ export default class Form extends Component<MyProps, MyState> {
   /*  onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ ...this.state, firstName: event.target.value });
   }; */
-  validationForm = async () => {
-    let isFormValid = true;
-    if (this.inputFirstName.current && this.inputFirstName.current.value.trim().length < 2) {
-      await this.setState({ ...this.state, firstNameValid: false, submitDisabled: true });
-      isFormValid = false;
-    } else {
-      /* this.setState((prevState) => {
-        return {
-          ...prevState,
-          firstNameValid: true,
-          submitDisabled: false,
-        };
-      }); */
-      await this.setState({ ...this.state, firstNameValid: true });
+  validationForm = async (event: React.FormEvent) => {
+    switch (event.target) {
+      case this.inputFirstName.current: {
+        if (this.inputFirstName.current && this.inputFirstName.current.value.trim().length < 2) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              firstNameValid: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              firstNameValid: true,
+            };
+          });
+        }
+        break;
+      }
+      case this.inputLastName.current: {
+        if (this.inputLastName.current && this.inputLastName.current.value.trim().length < 2) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              lastNameValid: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              lastNameValid: true,
+            };
+          });
+        }
+        break;
+      }
+      case this.inputBirthday.current: {
+        if (
+          (this.inputBirthday.current && new Date(this.inputBirthday.current.value) > new Date()) ||
+          (this.inputBirthday.current && !this.inputBirthday.current.value)
+        ) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              birthdayValid: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              birthdayValid: true,
+            };
+          });
+        }
+        break;
+      }
+      case this.selectCountry.current: {
+        if (this.selectCountry.current && !this.selectCountry.current.value.trim()) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              countryValid: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              countryValid: true,
+            };
+          });
+        }
+        break;
+      }
+      case this.inputAvatar.current: {
+        if (this.inputAvatar.current && !this.inputAvatar.current.value) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              avatarValid: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              avatarValid: true,
+            };
+          });
+        }
+        break;
+      }
+      case this.checkboxAgreement.current: {
+        if (this.checkboxAgreement.current && !this.checkboxAgreement.current.checked) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              agreement: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              agreement: true,
+            };
+          });
+        }
+        break;
+      }
+      case this.myForm.current: {
+        if (this.inputFirstName.current && this.inputFirstName.current.value.trim().length < 2) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              firstNameValid: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              firstNameValid: true,
+            };
+          });
+        }
+        if (this.inputLastName.current && this.inputLastName.current.value.trim().length < 2) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              lastNameValid: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              lastNameValid: true,
+            };
+          });
+        }
+        if (
+          (this.inputBirthday.current && new Date(this.inputBirthday.current.value) > new Date()) ||
+          (this.inputBirthday.current && !this.inputBirthday.current.value)
+        ) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              birthdayValid: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              birthdayValid: true,
+            };
+          });
+        }
+        if (this.selectCountry.current && !this.selectCountry.current.value.trim()) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              countryValid: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              countryValid: true,
+            };
+          });
+        }
+        if (this.inputAvatar.current && !this.inputAvatar.current.value) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              avatarValid: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              avatarValid: true,
+            };
+          });
+        }
+        if (this.checkboxAgreement.current && !this.checkboxAgreement.current.checked) {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              agreement: false,
+              submitDisabled: true,
+            };
+          });
+        } else {
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              agreement: true,
+            };
+          });
+        }
+        break;
+      }
+      default:
+        console.log('default');
+        break;
     }
-
-    if (this.inputLastName.current && this.inputLastName.current.value.trim().length < 2) {
-      await this.setState({ ...this.state, lastNameValid: false, submitDisabled: true });
-      isFormValid = false;
-    } else {
-      await this.setState({ ...this.state, lastNameValid: true });
-    }
-    if (
-      (this.inputBirthday.current && new Date(this.inputBirthday.current.value) > new Date()) ||
-      (this.inputBirthday.current && !this.inputBirthday.current.value)
-    ) {
-      await this.setState({ ...this.state, birthdayValid: false, submitDisabled: true });
-      isFormValid = false;
-    } else {
-      await this.setState({ ...this.state, birthdayValid: true });
-    }
-    if (this.selectCountry.current && !this.selectCountry.current.value.trim()) {
-      await this.setState({ ...this.state, countryValid: false, submitDisabled: true });
-      isFormValid = false;
-    } else {
-      await this.setState({ ...this.state, countryValid: true });
-    }
-    if (this.inputAvatar.current && !this.inputAvatar.current.value) {
-      await this.setState({ ...this.state, avatarValid: false, submitDisabled: true });
-      isFormValid = false;
-    } else {
-      await this.setState({ ...this.state, avatarValid: true });
-    }
-    if (this.checkboxAgreement.current && !this.checkboxAgreement.current.checked) {
-      await this.setState({ ...this.state, agreement: false, submitDisabled: true });
-      isFormValid = false;
-    } else {
-      await this.setState({ ...this.state, agreement: true });
-    }
-
-    return isFormValid;
+    return (
+      this.state.firstNameValid &&
+      this.state.lastNameValid &&
+      this.state.birthdayValid &&
+      this.state.countryValid &&
+      this.state.avatarValid &&
+      this.state.agreement
+    );
   };
 
   onSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (await this.validationForm()) {
+    if (await this.validationForm(event)) {
       this.setState({ ...this.state, submitDisabled: false });
       if (
         this.inputAvatar.current &&
@@ -142,9 +324,9 @@ export default class Form extends Component<MyProps, MyState> {
     }
   };
 
-  onChangeForm = async () => {
-    if (this.state.submitDisabled && this.state.isFormEdited) {
-      if (await this.validationForm()) {
+  onChangeForm = async (event: React.FormEvent) => {
+    if (this.state.isFormEdited) {
+      if (await this.validationForm(event)) {
         this.setState({ ...this.state, submitDisabled: false });
       }
     }
@@ -172,7 +354,7 @@ export default class Form extends Component<MyProps, MyState> {
       <form
         ref={this.myForm}
         id="createCardForm"
-        onChange={this.onChangeForm}
+        onChange={(event: React.FormEvent) => this.onChangeForm(event)}
         onSubmit={(event: React.FormEvent) => this.onSubmitForm(event)}
         onReset={() =>
           this.setState({
