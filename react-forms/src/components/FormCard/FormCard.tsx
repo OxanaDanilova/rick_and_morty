@@ -21,7 +21,7 @@ export default function FormCard({ card }: MyProps) {
       <p>
         Last Name: <span>{card.lastName}</span>
       </p>
-      <p>
+      <p data-testid="bdcard">
         Birthday: <span>{card.birthday}</span>
       </p>
       <p>
