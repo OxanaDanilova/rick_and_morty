@@ -1,30 +1,28 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import UserName from './UserName';
+import Birthday from './Birthday';
 
-describe('Check User Name', () => {
-  it('check of the rendering Agreement checkbox', () => {
+describe('Check Birthday', () => {
+  it('check of the rendering Birthday field', () => {
     const testRef = React.createRef<HTMLInputElement>();
     render(
-      <UserName
+      <Birthday
         reference={testRef}
-        label="First Name"
         isValid={true}
-        errorMessage="First Name schould contain more than 1 letter."
+        errorMessage="Birthday must be before the current date."
       />
     );
-    expect(screen.getByText('First Name')).toBeInTheDocument();
+    expect(screen.getByText('Birthday')).toBeInTheDocument();
   });
   it('check error message', () => {
     const testRef = React.createRef<HTMLInputElement>();
     render(
-      <UserName
+      <Birthday
         reference={testRef}
-        label="First Name"
         isValid={false}
-        errorMessage="First Name schould contain more than 1 letter."
+        errorMessage="Birthday must be before the current date."
       />
     );
-    expect(screen.getByText('First Name schould contain more than 1 letter.')).toBeInTheDocument();
+    expect(screen.getByText('Birthday must be before the current date.')).toBeInTheDocument();
   });
 });
