@@ -10,7 +10,13 @@ export default class Gender extends Component<MyProps> {
     return (
       <div className="genderWrapper">
         <label className="switch">
-          <input type="checkbox" name="gender" id="gender" ref={this.props.reference} />
+          <input
+            data-testid="gender"
+            type="checkbox"
+            name="gender"
+            id="gender"
+            ref={this.props.reference}
+          />
           <span className="slider round"></span>
           <label id="male">Male</label>
           <label id="female">Female</label>
