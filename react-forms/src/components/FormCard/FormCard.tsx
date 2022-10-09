@@ -1,4 +1,5 @@
 import React from 'react';
+import './FormCard.css';
 
 interface MyProps {
   card: {
@@ -12,12 +13,20 @@ interface MyProps {
 
 export default function FormCard({ card }: MyProps) {
   return (
-    <li className="card-wrapper" data-testid="card">
+    <li className="card-wrapper" data-testid="formcard">
       <img className="card-pic" src={card.avatar} alt="User avatar" />
-      <h3>{card.firstName}</h3>
-      <h3>{card.lastName}</h3>
-      <h4>{card.birthday}</h4>
-      <h4>{card.country}</h4>
+      <p>
+        First Name: <span>{card.firstName}</span>
+      </p>
+      <p>
+        Last Name: <span>{card.lastName}</span>
+      </p>
+      <p>
+        Birthday: <span>{card.birthday}</span>
+      </p>
+      <p>
+        Country: <span>{card.country}</span>
+      </p>
     </li>
   );
 }
