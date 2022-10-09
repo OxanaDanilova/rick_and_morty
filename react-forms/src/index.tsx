@@ -8,7 +8,7 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <Router basename="/oxanadanilova-REACT2022Q3/react-components">
+    <Router basename="/oxanadanilova-REACT2022Q3/react-forms">
       <App />
     </Router>
   </React.StrictMode>
