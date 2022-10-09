@@ -12,6 +12,7 @@ export default class Agreement extends Component<MyProps> {
       <div className="agreemWrapper">
         <label htmlFor="user-agreement">I consent to my personal data</label>
         <input
+          data-testid="agreement"
           type="checkbox"
           name="user-agreement"
           id="user-agreement"
