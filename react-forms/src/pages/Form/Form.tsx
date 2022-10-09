@@ -41,6 +41,8 @@ export default class Form extends Component<MyProps, MyState> {
     agreement: true,
     submitDisabled: true,
   };
+
+  myForm = React.createRef<HTMLFormElement>();
   inputFirstName = React.createRef<HTMLInputElement>();
   inputLastName = React.createRef<HTMLInputElement>();
   inputBirthday = React.createRef<HTMLInputElement>();
@@ -125,6 +127,17 @@ export default class Form extends Component<MyProps, MyState> {
           country: this.selectCountry.current.value,
           avatar: avatar,
         });
+        this.myForm.current && this.myForm.current.reset();
+        this.setState({
+          isFormEdited: false,
+          firstNameValid: true,
+          lastNameValid: true,
+          birthdayValid: true,
+          countryValid: true,
+          avatarValid: true,
+          agreement: true,
+          submitDisabled: true,
+        });
       }
     }
   };
@@ -157,6 +170,7 @@ export default class Form extends Component<MyProps, MyState> {
   render() {
     return (
       <form
+        ref={this.myForm}
         id="createCardForm"
         onChange={this.onChangeForm}
         onSubmit={(event: React.FormEvent) => this.onSubmitForm(event)}

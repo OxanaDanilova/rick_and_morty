@@ -26,8 +26,11 @@ export default class FormPage extends Component<unknown, MyState> {
     return (
       <div>
         <Form createCard={this.createCard} />
-        {this.state.cards.length &&
-          this.state.cards.map((formCard, id) => <FormCard key={id} card={formCard} />)}
+        <section className="formCardsWrapper">
+          {this.state.cards.length > 0
+            ? this.state.cards.map((formCard, id) => <FormCard key={id} card={formCard} />)
+            : ''}
+        </section>
       </div>
     );
   }
