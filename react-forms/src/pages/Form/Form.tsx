@@ -26,6 +26,7 @@ type MyState = {
   avatarValid: boolean;
   agreement: boolean;
   submitDisabled: boolean;
+  showCreateCardMes: boolean;
 };
 type MyProps = {
   createCard: (card: Card) => void;
@@ -41,6 +42,7 @@ export default class Form extends Component<MyProps, MyState> {
     avatarValid: true,
     agreement: true,
     submitDisabled: true,
+    showCreateCardMes: false,
   };
 
   myForm = React.createRef<HTMLFormElement>();
@@ -309,6 +311,7 @@ export default class Form extends Component<MyProps, MyState> {
           gender: this.inputGender.current.checked ? 'Female' : 'Male',
           avatar: avatar,
         });
+        this.setState({ ...this.state, showCreateCardMes: true });
         this.myForm.current && this.myForm.current.reset();
         this.setState({
           isFormEdited: false,
@@ -320,6 +323,9 @@ export default class Form extends Component<MyProps, MyState> {
           agreement: true,
           submitDisabled: true,
         });
+        setTimeout(() => {
+          this.setState({ ...this.state, showCreateCardMes: false });
+        }, 1500);
       }
     }
   };
@@ -369,6 +375,12 @@ export default class Form extends Component<MyProps, MyState> {
           })
         }
       >
+        <p
+          className="createCardMes"
+          style={{ opacity: this.state.showCreateCardMes ? '100%' : '0' }}
+        >
+          The card was created.
+        </p>
         <UserName
           label="First Name"
           reference={this.inputFirstName}
