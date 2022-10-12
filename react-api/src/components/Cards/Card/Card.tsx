@@ -1,14 +1,19 @@
 import React from 'react';
-import { BiLike } from 'react-icons/bi';
-import { BsEyeFill } from 'react-icons/bs';
-import CardType from 'types';
+/* import { BiLike } from 'react-icons/bi';
+import { BsEyeFill } from 'react-icons/bs'; */
+import Character from 'types';
 
-export default function Card({ image, id }: CardType) {
+interface MyProps {
+  character: Character;
+  id: number;
+}
+
+export default function Card({ character, id }: MyProps) {
   return (
     <li className="card-wrapper" data-testid="card">
-      <img className="card-pic" src={image} alt="Picture for card" />
-      <h4>Card {id + 1}</h4>
-      <p className="card-text">
+      <img className="card-pic" src={character.image} alt="Picture for card" />
+      <h4>Name: {character.name}</h4>
+      {/* <p className="card-text">
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias rerum facilis, veniam
         mollitia quaerat vel iste quae eveniet voluptate sint.
       </p>
@@ -24,7 +29,7 @@ export default function Card({ image, id }: CardType) {
           <BsEyeFill />
           505
         </div>
-      </div>
+      </div> */}
     </li>
   );
 }

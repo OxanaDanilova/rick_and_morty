@@ -2,13 +2,18 @@ import Cards from 'components/Cards/Cards';
 import Header from 'components/Header/Header';
 import SearchBar from 'components/SearchBar/SearchBar';
 import React, { Component } from 'react';
-import imgArr from 'data/data';
+import Character from 'types';
+//import imgArr from 'data/data';
 
-export default class Home extends Component {
+interface MyState {
+  dataArr: Character[];
+}
+
+export default class Home extends Component<unknown, MyState> {
   state = {
     dataArr: [],
   };
-  changeArr = (newArr: unknown) => {
+  changeArr = (newArr: Character[]) => {
     this.setState({ dataArr: newArr });
     console.log(this.state.dataArr);
   };
@@ -18,7 +23,7 @@ export default class Home extends Component {
         <Header pageName="Home page" />
         <main>
           <SearchBar changeArr={this.changeArr} />
-          {/* <Cards imgArr={this.state.dataArr} /> */}
+          <Cards dataArr={this.state.dataArr} />
         </main>
       </>
     );

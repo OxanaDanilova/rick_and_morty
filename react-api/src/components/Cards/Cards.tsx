@@ -1,18 +1,19 @@
 import React from 'react';
 import Card from './Card/Card';
 import './Cards.css';
+import Character from 'types';
 
 type Props = {
-  imgArr: string[];
+  dataArr: Character[];
 };
 
-export default function Cards({ imgArr }: Props) {
+export default function Cards({ dataArr }: Props) {
   return (
     <div>
       <h3>Cards</h3>
       <ul className="cards" data-testid="cards">
-        {imgArr.map((image: string, id: number) => (
-          <Card image={image} id={id} key={id} />
+        {dataArr.map((character: Character, id: number) => (
+          <Card character={character} id={id} key={id} />
         ))}
       </ul>
     </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+/* import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Cards from './Cards';
 
@@ -19,4 +19,4 @@ describe('Check Cards', () => {
     expect(screen.getAllByAltText('Picture for card')).toHaveLength(2);
     expect(screen.getAllByTestId('card')).toHaveLength(2);
   });
-});
+}); */

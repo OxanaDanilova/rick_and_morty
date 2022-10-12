@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { GoSearch } from 'react-icons/go';
 import './SearchBar.css';
+import Character from 'types';
 
 type MyProps = {
-  changeArr: (arr: unknown) => void;
+  changeArr: (arr: Character[]) => void;
 };
 
 export default class SearchBar extends Component<MyProps> {
@@ -20,6 +21,7 @@ export default class SearchBar extends Component<MyProps> {
     );
     const data = await response.json();
     this.props.changeArr(data.results);
+    console.log(data.results);
   };
 
   componentDidMount() {

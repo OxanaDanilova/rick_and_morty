@@ -1,4 +1,4 @@
-import React from 'react';
+/* import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Card from './Card';
 
@@ -29,3 +29,4 @@ describe('Check Card', () => {
     expect(view).toHaveClass('view');
   });
 });
+ */
