@@ -7,7 +7,8 @@ import SearchBar from './SearchBar';
 
 describe('Search Bar', () => {
   it('check rendering of the Search Bar', () => {
-    render(<SearchBar />);
+    const changeArr = () => true;
+    render(<SearchBar changeArr={changeArr} />);
     expect(screen.getByRole('textbox')).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/Search/i)).toBeInTheDocument();
   });
@@ -40,7 +41,8 @@ describe('LocalStorage for SearchBar', () => {
     Object.defineProperty(window, 'localStorage', {
       value: localStorageMock,
     });
-    const { unmount } = render(<SearchBar />);
+    const changeArr = () => true;
+    const { unmount } = render(<SearchBar changeArr={changeArr} />);
     const input = screen.getByPlaceholderText(/Search/i);
     userEvent.type(input, 'mytest');
     expect(window.localStorage.setItem).not.toBeCalled();
