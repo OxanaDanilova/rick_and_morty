@@ -2,15 +2,17 @@ import React from 'react';
 /* import { BiLike } from 'react-icons/bi';
 import { BsEyeFill } from 'react-icons/bs'; */
 import Character from 'types';
+import Modal from './Modal/Modal';
 
 interface MyProps {
   character: Character;
   id: number;
+  changeModal: (character: Character, isVisible: boolean) => void;
 }
 
-export default function Card({ character, id }: MyProps) {
+export default function Card({ character, id, changeModal }: MyProps) {
   return (
-    <li className="card-wrapper" data-testid="card">
+    <li className="card-wrapper" data-testid="card" onClick={() => changeModal(character, true)}>
       <img className="card-pic" src={character.image} alt="Picture for card" />
       <h4>Name: {character.name}</h4>
       {/* <p className="card-text">
