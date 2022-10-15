@@ -18,11 +18,12 @@ export default function Modal({ character, isVisible, changeModal }: MyProps) {
   };
   return (
     <section
+      data-testid="modal-wrapper"
       className="modal-wrapper"
       onClick={(event: React.MouseEvent<HTMLElement>) => closeModal(event)}
     >
       {isVisible && character ? (
-        <li className="card-wrapper modal" data-testid="card">
+        <li className="card-wrapper modal" data-testid="modal">
           <img className="card-pic" src={character.image} alt="Picture for card" />
           <p>Name: {character.name}</p>
           <p>Species: {character.species}</p>
@@ -30,8 +31,7 @@ export default function Modal({ character, isVisible, changeModal }: MyProps) {
           <p>Status:{character.status}</p>
           <p>Origin:{character.origin.name}</p>
           <p>Location:{character.location.name}</p>
-
-          <button className="close" onClick={() => changeModal(null, false)}>
+          <button data-testid="close" className="close" onClick={() => changeModal(null, false)}>
             &times;
           </button>
         </li>
