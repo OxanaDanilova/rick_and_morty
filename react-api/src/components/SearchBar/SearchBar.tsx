@@ -18,6 +18,7 @@ export default class SearchBar extends Component<MyProps> {
       this.props.changeLoading(true);
       const response = await fetch(url);
       const data = await response.json();
+      console.log(data.results);
       this.props.changeLoading(false);
       if (!data.results) {
         throw new Error();
