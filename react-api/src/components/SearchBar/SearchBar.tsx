@@ -4,7 +4,8 @@ import './SearchBar.css';
 import Character from 'types';
 
 type MyProps = {
-  changeArr: (arr: Character[]) => void;
+  changeArr: (arr: Character[], hasError: boolean) => void;
+  changeLoading: (isLoading: boolean) => void;
 };
 
 export default class SearchBar extends Component<MyProps> {
@@ -12,22 +13,34 @@ export default class SearchBar extends Component<MyProps> {
     searchItem: '',
   };
 
+  getDataFromApi = async (url: string) => {
+    try {
+      this.props.changeLoading(true);
+      const response = await fetch(url);
+      const data = await response.json();
+      this.props.changeLoading(false);
+      if (!data.results) {
+        throw new Error();
+      } else {
+        this.props.changeArr(data.results, false);
+      }
+    } catch (error) {
+      this.props.changeArr([], true);
+    }
+  };
+
   submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    /* 'https://rickandmortyapi.com/api/character' */
-    const response = await fetch(
+    await this.getDataFromApi(
       `https://rickandmortyapi.com/api/character/?name=${this.state.searchItem}`
     );
-    const data = await response.json();
-    this.props.changeArr(data.results);
-    console.log(data.results);
   };
 
   componentDidMount() {
     if (localStorage.getItem('searchItem')) {
       this.setState({ searchItem: localStorage.getItem('searchItem') });
     }
+    this.getDataFromApi(`https://rickandmortyapi.com/api/character`);
   }
 
   componentWillUnmount() {
