@@ -27,7 +27,7 @@ export default class Cards extends Component<Props, MyState> {
     return (
       <div>
         {this.props.isLoading ? (
-          <div id="load">
+          <div id="load" data-testid="loading">
             <div>G</div>
             <div>N</div>
             <div>I</div>

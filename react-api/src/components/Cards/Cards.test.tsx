@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Cards from './Cards';
+import Character from 'types';
 
 describe('Check Cards', () => {
   it('check rendering Cards', () => {
@@ -42,5 +43,15 @@ describe('Check Cards', () => {
     expect(cardsSection).toHaveClass('cards');
     expect(screen.getAllByAltText('Picture for card')).toHaveLength(2);
     expect(screen.getAllByTestId('card')).toHaveLength(2);
+  });
+  it('check the message for no results', () => {
+    const apiData: Character[] = [];
+    render(<Cards dataArr={apiData} hasError={true} isLoading={false} />);
+    expect(screen.getByText('There are no matching cards for this request.')).toBeInTheDocument();
+  });
+  it('check the message for no results', () => {
+    const apiData: Character[] = [];
+    render(<Cards dataArr={apiData} hasError={false} isLoading={true} />);
+    expect(screen.getByTestId('loading')).toBeInTheDocument();
   });
 });
