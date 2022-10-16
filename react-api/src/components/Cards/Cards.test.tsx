@@ -49,7 +49,7 @@ describe('Check Cards', () => {
     render(<Cards dataArr={apiData} hasError={true} isLoading={false} />);
     expect(screen.getByText('There are no matching cards for this request.')).toBeInTheDocument();
   });
-  it('check the message for no results', () => {
+  it('check loader', () => {
     const apiData: Character[] = [];
     render(<Cards dataArr={apiData} hasError={false} isLoading={true} />);
     expect(screen.getByTestId('loading')).toBeInTheDocument();
