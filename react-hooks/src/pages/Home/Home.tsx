@@ -1,40 +1,29 @@
 import Cards from 'components/Cards/Cards';
 import Header from 'components/Header/Header';
 import SearchBar from 'components/SearchBar/SearchBar';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Character from 'types';
 
-interface MyState {
-  dataArr: Character[];
-  hasError: boolean;
-  isLoading: boolean;
-}
+export default function Home() {
+  const [dataArr, setDataArr] = useState<Character[]>([]);
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-export default class Home extends Component<unknown, MyState> {
-  state = {
-    dataArr: [],
-    hasError: false,
-    isLoading: false,
+  const changeArr = (newArr: Character[], hasError: boolean) => {
+    setDataArr(newArr);
+    setHasError(hasError);
   };
-  changeArr = (newArr: Character[], hasError: boolean) => {
-    this.setState({ dataArr: newArr, hasError: hasError });
+  const changeLoading = (isLoading: boolean) => {
+    setIsLoading(isLoading);
   };
-  changeLoading = (isLoading: boolean) => {
-    this.setState({ ...this.state, isLoading: isLoading });
-  };
-  render() {
-    return (
-      <>
-        <Header pageName="Home page" />
-        <main>
-          <SearchBar changeArr={this.changeArr} changeLoading={this.changeLoading} />
-          <Cards
-            dataArr={this.state.dataArr}
-            hasError={this.state.hasError}
-            isLoading={this.state.isLoading}
-          />
-        </main>
-      </>
-    );
-  }
+
+  return (
+    <>
+      <Header pageName="Home page" />
+      <main>
+        <SearchBar changeArr={changeArr} changeLoading={changeLoading} />
+        <Cards dataArr={dataArr} hasError={hasError} isLoading={isLoading} />
+      </main>
+    </>
+  );
 }
