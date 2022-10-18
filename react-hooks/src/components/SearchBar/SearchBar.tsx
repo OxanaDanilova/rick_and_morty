@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { GoSearch } from 'react-icons/go';
 import './SearchBar.css';
 import Character from 'types';
@@ -8,58 +8,54 @@ type MyProps = {
   changeLoading: (isLoading: boolean) => void;
 };
 
-export default class SearchBar extends Component<MyProps> {
-  state = {
-    searchItem: '',
-  };
+export default function SearchBar({ changeLoading, changeArr }: MyProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  getDataFromApi = async (url: string) => {
+  const getDataFromApi = async (url: string) => {
     try {
-      this.props.changeLoading(true);
+      changeLoading(true);
       const response = await fetch(url);
       const data = await response.json();
-      this.props.changeLoading(false);
+      changeLoading(false);
       if (!data.results) {
         throw new Error();
       } else {
-        this.props.changeArr(data.results, false);
+        changeArr(data.results, false);
       }
     } catch (error) {
-      this.props.changeArr([], true);
+      changeArr([], true);
     }
   };
 
-  submitForm = async (e: React.FormEvent) => {
+  const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    await this.getDataFromApi(
-      `https://rickandmortyapi.com/api/character/?name=${this.state.searchItem}`
-    );
+    console.log(inputRef.current);
+    if (inputRef.current) {
+      getDataFromApi(`https://rickandmortyapi.com/api/character/?name=${inputRef.current.value}`);
+    }
   };
 
-  componentDidMount() {
-    if (localStorage.getItem('searchItem')) {
-      this.setState({ searchItem: localStorage.getItem('searchItem') });
+  useEffect(() => {
+    const localStorageData = localStorage.getItem('searchItem');
+    const searchItem = inputRef.current;
+    if (localStorageData && searchItem) {
+      searchItem.value = localStorageData;
+      getDataFromApi(`https://rickandmortyapi.com/api/character/?name=${localStorageData}`);
+    } else {
+      getDataFromApi(`https://rickandmortyapi.com/api/character`);
     }
-    this.getDataFromApi(`https://rickandmortyapi.com/api/character`);
-  }
 
-  componentWillUnmount() {
-    localStorage.setItem('searchItem', this.state.searchItem);
-  }
+    return () => {
+      if (searchItem) {
+        localStorage.setItem('searchItem', searchItem.value);
+      }
+    };
+  }, []);
 
-  render() {
-    return (
-      <form className="search-form" onSubmit={(e) => this.submitForm(e)}>
-        <GoSearch className="search-icon" />
-        <input
-          type="text"
-          value={this.state.searchItem}
-          placeholder="Search"
-          onChange={(e) => {
-            this.setState({ searchItem: e.target.value });
-          }}
-        />
-      </form>
-    );
-  }
+  return (
+    <form className="search-form" onSubmit={(e) => submitForm(e)}>
+      <GoSearch className="search-icon" />
+      <input type="text" name="search" ref={inputRef} placeholder="Search" />
+    </form>
+  );
 }
