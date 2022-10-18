@@ -29,7 +29,6 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
 
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(inputRef.current);
     if (inputRef.current) {
       getDataFromApi(`https://rickandmortyapi.com/api/character/?name=${inputRef.current.value}`);
     }
