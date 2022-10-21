@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './Birthday.css';
 
 interface MyProps {
@@ -7,16 +7,14 @@ interface MyProps {
   reference: React.RefObject<HTMLInputElement>;
 }
 
-export default class Birthday extends Component<MyProps> {
-  render() {
-    return (
-      <div className="birthdayWrapper">
-        <label>Birthday</label>
-        <div className="bday-wrapper">
-          <input type="date" name="dob" id="dob" ref={this.props.reference} />
-          {!this.props.isValid && <p className="er-mes">{this.props.errorMessage}</p>}
-        </div>
+export default function Birthday({ errorMessage, isValid, reference }: MyProps) {
+  return (
+    <div className="birthdayWrapper">
+      <label>Birthday</label>
+      <div className="bday-wrapper">
+        <input type="date" name="dob" id="dob" ref={reference} />
+        {!isValid && <p className="er-mes">{errorMessage}</p>}
       </div>
-    );
-  }
+    </div>
+  );
 }

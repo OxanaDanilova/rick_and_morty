@@ -1,13 +1,15 @@
-import Avatar from 'components/Avatar/Avatar';
-import Birthday from 'components/Birthday/Birthday';
-import Country from 'components/Country/Country';
-import Gender from 'components/Gender/Gender';
-import UserName from 'components/UserName/UserName';
-import Agreement from 'components/Agreement/Agreement';
-import React, { Component } from 'react';
-import './Form.css';
-import FormButtons from 'components/FormButtons/FormButtons';
-
+import React, { useEffect, useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import '../../FormTest.css';
+type FormValues = {
+  fname: string;
+  lname: string;
+  dob: string;
+  country: string;
+  gender: string;
+  avatar: FileList;
+  agreement: string;
+};
 interface Card {
   firstName: string;
   lastName: string;
@@ -16,24 +18,193 @@ interface Card {
   avatar: string;
   gender: string;
 }
-
-type MyState = {
-  isFormEdited: boolean;
-  firstNameValid: boolean;
-  lastNameValid: boolean;
-  birthdayValid: boolean;
-  countryValid: boolean;
-  avatarValid: boolean;
-  agreement: boolean;
-  submitDisabled: boolean;
-  showCreateCardMes: boolean;
-};
 type MyProps = {
   createCard: (card: Card) => void;
 };
 
-export default class Form extends Component<MyProps, MyState> {
-  state: MyState = {
+export default function Form({ createCard }: MyProps) {
+  const [showCreateCardMes, setShowCreateMes] = useState<boolean>(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormValues>();
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    console.log(Object.entries(errors));
+    console.log(data);
+    const userAvatar = URL.createObjectURL(data.avatar[0]);
+    createCard({
+      firstName: data.fname,
+      lastName: data.lname,
+      birthday: data.dob,
+      country: data.country,
+      gender: data.gender ? 'Female' : 'Male',
+      avatar: userAvatar,
+    });
+    setShowCreateMes(true);
+
+    setTimeout(() => {
+      setShowCreateMes(false);
+    }, 1500);
+
+    reset();
+  };
+
+  return (
+    <form id="createCardForm" onSubmit={handleSubmit(onSubmit)}>
+      <p className="createCardMes" style={{ opacity: showCreateCardMes ? '100%' : '0' }}>
+        The card was created.
+      </p>
+      <div className="nameWrapper">
+        <label>First name</label>
+        <div className="input-wrapper">
+          <input
+            data-testid="formusername"
+            type="text"
+            id="fname"
+            {...register('fname', { required: true, minLength: 2 })}
+          />
+          {errors.fname && errors.fname.type === 'required' && (
+            <p className="er-mes">This is required</p>
+          )}
+          {errors.fname && errors.fname.type === 'minLength' && (
+            <p className="er-mes">First name should be more than 1 letter</p>
+          )}
+        </div>
+      </div>
+      <div className="nameWrapper">
+        <label>Last name</label>
+        <div className="input-wrapper">
+          <input
+            data-testid="formusername"
+            type="text"
+            id="lname"
+            {...register('lname', { required: true, minLength: 2 })}
+          />
+          {errors.lname && errors.lname.type === 'required' && (
+            <p className="er-mes">This is required</p>
+          )}
+          {errors.lname && errors.lname.type === 'minLength' && (
+            <p className="er-mes">Last name should be more than 1 letter</p>
+          )}
+        </div>
+      </div>
+
+      <div className="birthdayWrapper">
+        <label>Birthday</label>
+        <div className="bday-wrapper">
+          <input
+            type="date"
+            id="dob"
+            {...register('dob', {
+              required: true,
+            })}
+          />
+
+          {errors.dob && errors.dob.type === 'required' && (
+            <p className="er-mes">This is required</p>
+          )}
+        </div>
+      </div>
+      <div className="countryWrapper">
+        <label>Country</label>
+        <div className="select-wrapper">
+          <select {...register('country', { required: true })}>
+            <option></option>
+            <option>Germany</option>
+            <option>Kasachstan</option>
+            <option>Russia</option>
+            <option>China</option>
+            <option>Spain</option>
+          </select>
+          {errors.lname && errors.lname.type === 'required' && (
+            <p className="er-mes">This is required</p>
+          )}
+        </div>
+      </div>
+
+      <div className="genderWrapper">
+        <label className="switch">
+          <input data-testid="gender" type="checkbox" id="gender" {...register('gender')} />
+          <span className="slider round"></span>
+          <label id="male">Male</label>
+          <label id="female">Female</label>
+        </label>
+      </div>
+      <div className="avatar-wrapper">
+        <input
+          data-testid="avatar"
+          type="file"
+          id="avatar"
+          {...register('avatar', { required: true })}
+        />
+        {errors.avatar && errors.avatar.type === 'required' && (
+          <p className="er-mes">This is required</p>
+        )}
+      </div>
+      <div className="agreemWrapper">
+        <label htmlFor="user-agreement">I consent to my personal data</label>
+        <input
+          data-testid="agreement"
+          type="checkbox"
+          id="user-agreement"
+          {...register('agreement', { required: true })}
+        />
+        {errors.agreement && errors.agreement.type === 'required' && (
+          <p className="er-mes">This is required</p>
+        )}
+      </div>
+
+      <div className="panelButtons">
+        <input
+          type="submit"
+          value="Create Card"
+          disabled={Object.entries(errors).length ? true : false}
+        />
+        <input type="reset" value="Reset" />
+      </div>
+    </form>
+  );
+}
+
+// import Avatar from 'components/Avatar/Avatar';
+// import Birthday from 'components/Birthday/Birthday';
+// import Country from 'components/Country/Country';
+// import Gender from 'components/Gender/Gender';
+// import UserName from 'components/UserName/UserName';
+// import Agreement from 'components/Agreement/Agreement';
+// import React, { useState } from 'react';
+// import './Form.css';
+// import FormButtons from 'components/FormButtons/FormButtons';
+
+// interface Card {
+//   firstName: string;
+//   lastName: string;
+//   birthday: string;
+//   country: string;
+//   avatar: string;
+//   gender: string;
+// }
+
+// type MyState = {
+//   isFormEdited: boolean;
+//   firstNameValid: boolean;
+//   lastNameValid: boolean;
+//   birthdayValid: boolean;
+//   countryValid: boolean;
+//   avatarValid: boolean;
+//   agreement: boolean;
+//   submitDisabled: boolean;
+//   showCreateCardMes: boolean;
+// };
+// type MyProps = {
+//   createCard: (card: Card) => void;
+// };
+
+/* export default function Form({ createCard }: MyProps) {
+  const [formState, setFormState] = useState<MyState>({
     isFormEdited: false,
     firstNameValid: true,
     lastNameValid: true,
@@ -43,235 +214,262 @@ export default class Form extends Component<MyProps, MyState> {
     agreement: true,
     submitDisabled: true,
     showCreateCardMes: false,
-  };
+  });
+  const [firstNameValid, setFirstNameValid] = useState<boolean>(true);
+  const [submitDisabled, setSubmitDisabled] = useState<boolean>(true);
 
-  myForm = React.createRef<HTMLFormElement>();
-  inputFirstName = React.createRef<HTMLInputElement>();
-  inputLastName = React.createRef<HTMLInputElement>();
-  inputBirthday = React.createRef<HTMLInputElement>();
-  selectCountry = React.createRef<HTMLSelectElement>();
-  inputGender = React.createRef<HTMLInputElement>();
-  inputAvatar = React.createRef<HTMLInputElement>();
-  checkboxAgreement = React.createRef<HTMLInputElement>();
+  const myForm = React.createRef<HTMLFormElement>();
+  const inputFirstName = React.createRef<HTMLInputElement>();
+  const inputLastName = React.createRef<HTMLInputElement>();
+  const inputBirthday = React.createRef<HTMLInputElement>();
+  const selectCountry = React.createRef<HTMLSelectElement>();
+  const inputGender = React.createRef<HTMLInputElement>();
+  const inputAvatar = React.createRef<HTMLInputElement>();
+  const checkboxAgreement = React.createRef<HTMLInputElement>();
 
-  validationForm = async (event: React.FormEvent) => {
+  const validationForm = async (event: React.FormEvent) => {
     switch (event.target) {
-      case this.inputFirstName.current: {
-        if (this.inputFirstName.current && this.inputFirstName.current.value.trim().length < 2) {
-          await this.setState((prevState) => {
+      case inputFirstName.current: {
+        if (inputFirstName.current && inputFirstName.current.value.trim().length < 2) {
+          setFormState({ ...formState, firstNameValid: false, submitDisabled: true });
+          /*   await this.setState((prevState) => {
             return {
               ...prevState,
               firstNameValid: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, firstNameValid: true });
+          /*   await this.setState((prevState) => {
             return {
               ...prevState,
               firstNameValid: true,
             };
-          });
+          }); 
         }
         break;
       }
-      case this.inputLastName.current: {
-        if (this.inputLastName.current && this.inputLastName.current.value.trim().length < 2) {
-          await this.setState((prevState) => {
+      case inputLastName.current: {
+        if (inputLastName.current && inputLastName.current.value.trim().length < 2) {
+          setFormState({ ...formState, lastNameValid: false, submitDisabled: true });
+          /*   await this.setState((prevState) => {
             return {
               ...prevState,
               lastNameValid: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, lastNameValid: true });
+          /* await this.setState((prevState) => {
             return {
               ...prevState,
               lastNameValid: true,
             };
-          });
+          }); 
         }
         break;
       }
-      case this.inputBirthday.current: {
+      case inputBirthday.current: {
         if (
-          (this.inputBirthday.current && new Date(this.inputBirthday.current.value) > new Date()) ||
-          (this.inputBirthday.current && !this.inputBirthday.current.value)
+          (inputBirthday.current && new Date(inputBirthday.current.value) > new Date()) ||
+          (inputBirthday.current && !inputBirthday.current.value)
         ) {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, birthdayValid: false, submitDisabled: true });
+          /* await this.setState((prevState) => {
             return {
               ...prevState,
               birthdayValid: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, birthdayValid: true });
+          /* await this.setState((prevState) => {
             return {
               ...prevState,
               birthdayValid: true,
             };
-          });
+          }); 
         }
         break;
       }
-      case this.selectCountry.current: {
-        if (this.selectCountry.current && !this.selectCountry.current.value.trim()) {
-          await this.setState((prevState) => {
+      case selectCountry.current: {
+        if (selectCountry.current && !selectCountry.current.value.trim()) {
+          setFormState({ ...formState, countryValid: false, submitDisabled: true });
+          /* await this.setState((prevState) => {
             return {
               ...prevState,
               countryValid: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, countryValid: true });
+          /*  await this.setState((prevState) => {
             return {
               ...prevState,
               countryValid: true,
             };
-          });
+          }); 
         }
         break;
       }
-      case this.inputAvatar.current: {
-        if (this.inputAvatar.current && !this.inputAvatar.current.value) {
-          await this.setState((prevState) => {
+      case inputAvatar.current: {
+        if (inputAvatar.current && !inputAvatar.current.value) {
+          setFormState({ ...formState, avatarValid: false, submitDisabled: true });
+          /*  await this.setState((prevState) => {
             return {
               ...prevState,
               avatarValid: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, avatarValid: true });
+          /*   await this.setState((prevState) => {
             return {
               ...prevState,
               avatarValid: true,
             };
-          });
+          }); 
         }
         break;
       }
-      case this.checkboxAgreement.current: {
-        if (this.checkboxAgreement.current && !this.checkboxAgreement.current.checked) {
-          await this.setState((prevState) => {
+      case checkboxAgreement.current: {
+        if (checkboxAgreement.current && !checkboxAgreement.current.checked) {
+          setFormState({ ...formState, agreement: false, submitDisabled: true });
+          /* await this.setState((prevState) => {
             return {
               ...prevState,
               agreement: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, agreement: true });
+          /*  await this.setState((prevState) => {
             return {
               ...prevState,
               agreement: true,
             };
-          });
+          }); 
         }
         break;
       }
-      case this.myForm.current: {
-        if (this.inputFirstName.current && this.inputFirstName.current.value.trim().length < 2) {
-          await this.setState((prevState) => {
+      case myForm.current: {
+        console.log('ich bin hier');
+        if (inputFirstName.current && inputFirstName.current.value.trim().length < 2) {
+          console.log('error Name');
+          setFirstNameValid(false);
+          setSubmitDisabled(true);
+
+          //await setFormState({ ...formState, firstNameValid: false, submitDisabled: true });
+
+          /*  await this.setState((prevState) => {
             return {
               ...prevState,
               firstNameValid: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, firstNameValid: true });
+          /* await this.setState((prevState) => {
             return {
               ...prevState,
               firstNameValid: true,
             };
-          });
+          }); 
         }
-        if (this.inputLastName.current && this.inputLastName.current.value.trim().length < 2) {
-          await this.setState((prevState) => {
+        if (inputLastName.current && inputLastName.current.value.trim().length < 2) {
+          setFormState({ ...formState, lastNameValid: false, submitDisabled: true });
+          /* await this.setState((prevState) => {
             return {
               ...prevState,
               lastNameValid: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, lastNameValid: true });
+          /* await this.setState((prevState) => {
             return {
               ...prevState,
               lastNameValid: true,
             };
-          });
+          }); 
         }
         if (
-          (this.inputBirthday.current && new Date(this.inputBirthday.current.value) > new Date()) ||
-          (this.inputBirthday.current && !this.inputBirthday.current.value)
+          (inputBirthday.current && new Date(inputBirthday.current.value) > new Date()) ||
+          (inputBirthday.current && !inputBirthday.current.value)
         ) {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, birthdayValid: false, submitDisabled: true });
+           await this.setState((prevState) => {
             return {
               ...prevState,
               birthdayValid: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, birthdayValid: true });
+          /*  await this.setState((prevState) => {
             return {
               ...prevState,
               birthdayValid: true,
             };
-          });
+          }); 
         }
-        if (this.selectCountry.current && !this.selectCountry.current.value.trim()) {
-          await this.setState((prevState) => {
+        if (selectCountry.current && !selectCountry.current.value.trim()) {
+          setFormState({ ...formState, countryValid: false, submitDisabled: true });
+          /* await this.setState((prevState) => {
             return {
               ...prevState,
               countryValid: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, countryValid: true });
+          /*  await this.setState((prevState) => {
             return {
               ...prevState,
               countryValid: true,
             };
-          });
+          }); 
         }
-        if (this.inputAvatar.current && !this.inputAvatar.current.value) {
-          await this.setState((prevState) => {
+        if (inputAvatar.current && !inputAvatar.current.value) {
+          setFormState({ ...formState, avatarValid: false, submitDisabled: true });
+          /* await this.setState((prevState) => {
             return {
               ...prevState,
               avatarValid: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
+          setFormState({ ...formState, avatarValid: true });
+          /*    await this.setState((prevState) => {
             return {
               ...prevState,
               avatarValid: true,
             };
-          });
+          }); 
         }
-        if (this.checkboxAgreement.current && !this.checkboxAgreement.current.checked) {
-          await this.setState((prevState) => {
+        if (checkboxAgreement.current && !checkboxAgreement.current.checked) {
+          setFormState({ ...formState, agreement: false, submitDisabled: true });
+          /*  await this.setState((prevState) => {
             return {
               ...prevState,
               agreement: false,
               submitDisabled: true,
             };
-          });
+          }); 
         } else {
-          await this.setState((prevState) => {
-            return {
-              ...prevState,
-              agreement: true,
-            };
-          });
+          setFormState({ ...formState, agreement: true });
+
         }
         break;
       }
@@ -280,40 +478,42 @@ export default class Form extends Component<MyProps, MyState> {
         break;
     }
     return (
-      this.state.firstNameValid &&
-      this.state.lastNameValid &&
-      this.state.birthdayValid &&
-      this.state.countryValid &&
-      this.state.avatarValid &&
-      this.state.agreement
+      formState.firstNameValid &&
+      formState.lastNameValid &&
+      formState.birthdayValid &&
+      formState.countryValid &&
+      formState.avatarValid &&
+      formState.agreement
     );
   };
 
-  onSubmitForm = async (event: React.FormEvent) => {
+  const onSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (await this.validationForm(event)) {
-      this.setState({ ...this.state, submitDisabled: false });
+    if (await validationForm(event)) {
+      setFormState({ ...formState, submitDisabled: false });
+
       if (
-        this.inputAvatar.current &&
-        this.inputAvatar.current.files &&
-        this.inputFirstName.current &&
-        this.inputLastName.current &&
-        this.inputBirthday.current &&
-        this.inputGender.current &&
-        this.selectCountry.current
+        inputAvatar.current &&
+        inputAvatar.current.files &&
+        inputFirstName.current &&
+        inputLastName.current &&
+        inputBirthday.current &&
+        inputGender.current &&
+        selectCountry.current
       ) {
-        const avatar = URL.createObjectURL(this.inputAvatar.current.files[0]);
-        this.props.createCard({
-          firstName: this.inputFirstName.current.value,
-          lastName: this.inputLastName.current.value,
-          birthday: this.inputBirthday.current.value,
-          country: this.selectCountry.current.value,
-          gender: this.inputGender.current.checked ? 'Female' : 'Male',
+        const avatar = URL.createObjectURL(inputAvatar.current.files[0]);
+        createCard({
+          firstName: inputFirstName.current.value,
+          lastName: inputLastName.current.value,
+          birthday: inputBirthday.current.value,
+          country: selectCountry.current.value,
+          gender: inputGender.current.checked ? 'Female' : 'Male',
           avatar: avatar,
         });
-        this.setState({ ...this.state, showCreateCardMes: true });
-        this.myForm.current && this.myForm.current.reset();
-        this.setState({
+        setFormState({ ...formState, showCreateCardMes: true });
+        myForm.current && myForm.current.reset();
+        setFormState({
+          ...formState,
           isFormEdited: false,
           firstNameValid: true,
           lastNameValid: true,
@@ -323,99 +523,97 @@ export default class Form extends Component<MyProps, MyState> {
           agreement: true,
           submitDisabled: true,
         });
+
         setTimeout(() => {
-          this.setState({ ...this.state, showCreateCardMes: false });
+          setFormState({ ...formState, showCreateCardMes: false });
         }, 1500);
       }
     }
   };
 
-  onChangeForm = async (event: React.FormEvent) => {
-    if (this.state.isFormEdited && this.state.submitDisabled) {
-      if (await this.validationForm(event)) {
-        this.setState({ ...this.state, submitDisabled: false });
+  const onChangeForm = async (event: React.FormEvent) => {
+    if (formState.isFormEdited && formState.submitDisabled) {
+      if (await validationForm(event)) {
+        setFormState({ ...formState, submitDisabled: false });
       }
     }
     if (
-      this.state.firstNameValid &&
-      this.state.lastNameValid &&
-      this.state.birthdayValid &&
-      this.state.countryValid &&
-      this.state.avatarValid &&
-      this.state.agreement &&
-      ((this.inputFirstName.current && this.inputFirstName.current.value.trim()) ||
-        (this.inputLastName.current && this.inputLastName.current.value.trim()) ||
-        (this.inputBirthday.current && this.inputBirthday.current.value.trim()) ||
-        (this.selectCountry.current && this.selectCountry.current.value.trim()) ||
-        (this.inputGender.current && this.inputGender.current.value.trim()) ||
-        (this.inputAvatar.current && this.inputAvatar.current.value) ||
-        (this.checkboxAgreement.current && this.checkboxAgreement.current.value))
+      formState.firstNameValid &&
+      formState.lastNameValid &&
+      formState.birthdayValid &&
+      formState.countryValid &&
+      formState.avatarValid &&
+      formState.agreement &&
+      ((inputFirstName.current && inputFirstName.current.value.trim()) ||
+        (inputLastName.current && inputLastName.current.value.trim()) ||
+        (inputBirthday.current && inputBirthday.current.value.trim()) ||
+        (selectCountry.current && selectCountry.current.value.trim()) ||
+        (inputGender.current && inputGender.current.value.trim()) ||
+        (inputAvatar.current && inputAvatar.current.value) ||
+        (checkboxAgreement.current && checkboxAgreement.current.value))
     ) {
-      this.setState({ ...this.state, isFormEdited: true, submitDisabled: false });
+      setFormState({ ...formState, isFormEdited: true, submitDisabled: false });
     }
   };
 
-  render() {
-    return (
-      <form
-        ref={this.myForm}
-        id="createCardForm"
-        onChange={(event: React.FormEvent) => this.onChangeForm(event)}
-        onSubmit={(event: React.FormEvent) => this.onSubmitForm(event)}
-        onReset={() =>
-          this.setState({
-            isFormEdited: false,
-            firstNameValid: true,
-            lastNameValid: true,
-            birthdayValid: true,
-            countryValid: true,
-            avatarValid: true,
-            agreement: true,
-            submitDisabled: true,
-          })
-        }
-      >
-        <p
-          className="createCardMes"
-          style={{ opacity: this.state.showCreateCardMes ? '100%' : '0' }}
-        >
-          The card was created.
-        </p>
-        <UserName
-          label="First Name"
-          reference={this.inputFirstName}
-          isValid={this.state.firstNameValid}
-          errorMessage="First Name schould contain more than 1 letter."
-        />
-        <UserName
-          label="Last Name"
-          reference={this.inputLastName}
-          isValid={this.state.lastNameValid}
-          errorMessage=" Last Name schould contain more than 1 letter."
-        />
-        <Birthday
-          reference={this.inputBirthday}
-          isValid={this.state.birthdayValid}
-          errorMessage="Birthday must be before the current date."
-        />
-        <Country
-          reference={this.selectCountry}
-          errorMessage="This field is required."
-          isValid={this.state.countryValid}
-        />
-        <Gender reference={this.inputGender} />
-        <Avatar
-          reference={this.inputAvatar}
-          isValid={this.state.avatarValid}
-          errorMessage="Add your avatar please."
-        />
-        <Agreement
-          reference={this.checkboxAgreement}
-          isValid={this.state.agreement}
-          errorMessage="This field is required."
-        />
-        <FormButtons disabled={this.state.submitDisabled} />
-      </form>
-    );
-  }
+  return (
+    <form
+      ref={myForm}
+      id="createCardForm"
+      onChange={(event: React.FormEvent) => onChangeForm(event)}
+      onSubmit={(event: React.FormEvent) => onSubmitForm(event)}
+      onReset={() =>
+        setFormState({
+          ...formState,
+          isFormEdited: false,
+          firstNameValid: true,
+          lastNameValid: true,
+          birthdayValid: true,
+          countryValid: true,
+          avatarValid: true,
+          agreement: true,
+          submitDisabled: true,
+        })
+      }
+    >
+      <p className="createCardMes" style={{ opacity: formState.showCreateCardMes ? '100%' : '0' }}>
+        The card was created.
+      </p>
+      <UserName
+        label="First Name"
+        reference={inputFirstName}
+        isValid={formState.firstNameValid}
+        errorMessage="First Name schould contain more than 1 letter."
+      />
+      <UserName
+        label="Last Name"
+        reference={inputLastName}
+        isValid={formState.lastNameValid}
+        errorMessage=" Last Name schould contain more than 1 letter."
+      />
+      <Birthday
+        reference={inputBirthday}
+        isValid={formState.birthdayValid}
+        errorMessage="Birthday must be before the current date."
+      />
+      <Country
+        reference={selectCountry}
+        errorMessage="This field is required."
+        isValid={formState.countryValid}
+      />
+      <Gender reference={inputGender} />
+      <Avatar
+        reference={inputAvatar}
+        isValid={formState.avatarValid}
+        errorMessage="Add your avatar please."
+      />
+      <Agreement
+        reference={checkboxAgreement}
+        isValid={formState.agreement}
+        errorMessage="This field is required."
+      />
+      <FormButtons disabled={formState.submitDisabled} />
+    </form>
+  );
 }
+ */

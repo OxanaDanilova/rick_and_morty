@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './UserName.css';
 
 interface MyProps {
@@ -8,16 +8,14 @@ interface MyProps {
   reference: React.RefObject<HTMLInputElement>;
 }
 
-export default class UserName extends Component<MyProps> {
-  render() {
-    return (
-      <div className="nameWrapper">
-        <label>{this.props.label}</label>
-        <div className="input-wrapper">
-          <input data-testid="formusername" ref={this.props.reference} type="text" id="fname" />
-          {!this.props.isValid && <p className="er-mes">{this.props.errorMessage}</p>}
-        </div>
+export default function UserName({ label, errorMessage, isValid, reference }: MyProps) {
+  return (
+    <div className="nameWrapper">
+      <label>{label}</label>
+      <div className="input-wrapper">
+        <input data-testid="formusername" ref={reference} type="text" id="fname" />
+        {!isValid && <p className="er-mes">{errorMessage}</p>}
       </div>
-    );
-  }
+    </div>
+  );
 }
