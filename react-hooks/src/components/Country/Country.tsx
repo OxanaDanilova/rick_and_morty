@@ -1,18 +1,41 @@
 import React from 'react';
+import {
+  FieldErrorsImpl,
+  RegisterOptions,
+  UseFormRegister,
+  Path,
+  FieldValues,
+} from 'react-hook-form';
 import './Country.css';
 
-interface MyProps {
-  errorMessage: string;
-  isValid: boolean;
-  reference: React.RefObject<HTMLSelectElement>;
-}
+type FormInputProps<TFormValues extends FieldValues> = {
+  name: Path<TFormValues>;
+  rules?: RegisterOptions;
+  register: UseFormRegister<TFormValues>;
+  errors: Partial<
+    FieldErrorsImpl<{
+      fname: string;
+      lname: string;
+      dob: string;
+      country: string;
+      gender: string;
+      avatar: FileList;
+      agreement: string;
+    }>
+  >;
+};
 
-export default function Country({ errorMessage, isValid, reference }: MyProps) {
+export const Country = <TFormValues extends Record<string, unknown>>({
+  name,
+  register,
+  rules,
+  errors,
+}: FormInputProps<TFormValues>): JSX.Element => {
   return (
     <div className="countryWrapper">
       <label>Country</label>
       <div className="select-wrapper">
-        <select ref={reference}>
+        <select {...(register && register(name, rules))}>
           <option></option>
           <option>Germany</option>
           <option>Kasachstan</option>
@@ -20,8 +43,10 @@ export default function Country({ errorMessage, isValid, reference }: MyProps) {
           <option>China</option>
           <option>Spain</option>
         </select>
-        {!isValid && <p className="er-mes">{errorMessage}</p>}
+        {errors.country && errors.country.type === 'required' && (
+          <p className="er-mes">This field is required</p>
+        )}
       </div>
     </div>
   );
-}
+};

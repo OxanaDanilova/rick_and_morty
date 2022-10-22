@@ -1,24 +1,48 @@
 import React from 'react';
 import './Agreement.css';
+import {
+  FieldErrorsImpl,
+  RegisterOptions,
+  UseFormRegister,
+  Path,
+  FieldValues,
+} from 'react-hook-form';
 
-interface MyProps {
-  errorMessage: string;
-  isValid: boolean;
-  reference: React.RefObject<HTMLInputElement>;
-}
+type FormInputProps<TFormValues extends FieldValues> = {
+  name: Path<TFormValues>;
+  rules?: RegisterOptions;
+  register: UseFormRegister<TFormValues>;
+  errors: Partial<
+    FieldErrorsImpl<{
+      fname: string;
+      lname: string;
+      dob: string;
+      country: string;
+      gender: string;
+      avatar: FileList;
+      agreement: string;
+    }>
+  >;
+};
 
-export default function Agreement({ errorMessage, isValid, reference }: MyProps) {
+export const Agreement = <TFormValues extends Record<string, unknown>>({
+  name,
+  register,
+  rules,
+  errors,
+}: FormInputProps<TFormValues>): JSX.Element => {
   return (
     <div className="agreemWrapper">
       <label htmlFor="user-agreement">I consent to my personal data</label>
       <input
         data-testid="agreement"
         type="checkbox"
-        name="user-agreement"
         id="user-agreement"
-        ref={reference}
+        {...(register && register(name, rules))}
       />
-      {!isValid && <p className="er-mes">{errorMessage}</p>}
+      {errors.agreement && errors.agreement.type === 'required' && (
+        <p className="er-mes">This field is required</p>
+      )}
     </div>
   );
-}
+};
