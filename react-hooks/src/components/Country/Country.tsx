@@ -44,7 +44,9 @@ export const Country = <TFormValues extends Record<string, unknown>>({
           <option>Spain</option>
         </select>
         {errors.country && errors.country.type === 'required' && (
-          <p className="er-mes">This field is required</p>
+          <p className="er-mes" data-testid="countryErMes">
+            This field is required
+          </p>
         )}
       </div>
     </div>

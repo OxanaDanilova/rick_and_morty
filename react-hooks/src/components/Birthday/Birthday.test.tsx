@@ -1,29 +1,19 @@
-/* import React from 'react';
+import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Birthday } from './Birthday';
+import Form from '../../pages/Form/Form';
+import userEvent from '@testing-library/user-event';
 
 describe('Check Birthday', () => {
   it('check of the rendering Birthday field', () => {
-    const testRef = React.createRef<HTMLInputElement>();
-    render(
-      <Birthday
-        reference={testRef}
-        isValid={true}
-        errorMessage="Birthday must be before the current date."
-      />
-    );
+    const createCard = jest.fn();
+    render(<Form createCard={createCard} />);
     expect(screen.getByText('Birthday')).toBeInTheDocument();
   });
-  it('check error message', () => {
-    const testRef = React.createRef<HTMLInputElement>();
-    render(
-      <Birthday
-        reference={testRef}
-        isValid={false}
-        errorMessage="Birthday must be before the current date."
-      />
-    );
-    expect(screen.getByText('Birthday must be before the current date.')).toBeInTheDocument();
+  it('check error message', async () => {
+    const createCard = jest.fn();
+    render(<Form createCard={createCard} />);
+    const submitBtn = screen.getByText('Create Card');
+    userEvent.click(submitBtn);
+    expect(await screen.findByTestId('birthdayErMes')).toBeInTheDocument();
   });
 });
- */

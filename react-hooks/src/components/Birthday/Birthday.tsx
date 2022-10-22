@@ -37,7 +37,9 @@ export const Birthday = <TFormValues extends Record<string, unknown>>({
       <div className="bday-wrapper">
         <input type="date" id="dob" {...(register && register(name, rules))} />
         {errors.dob && errors.dob.type === 'required' && (
-          <p className="er-mes">This field is required</p>
+          <p className="er-mes" data-testid="birthdayErMes">
+            This field is required
+          </p>
         )}
       </div>
     </div>

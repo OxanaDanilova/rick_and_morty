@@ -40,7 +40,9 @@ export const Avatar = <TFormValues extends Record<string, unknown>>({
         {...(register && register(name, rules))}
       />
       {errors.avatar && errors.avatar.type === 'required' && (
-        <p className="er-mes">This field is required</p>
+        <p className="er-mes" data-testid="avatarErMes">
+          This field is required
+        </p>
       )}
     </div>
   );

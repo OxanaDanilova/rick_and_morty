@@ -49,7 +49,9 @@ export const UserName = <TFormValues extends Record<string, unknown>>({
           {...(register && register(name, rules))}
         />
         {errors[errorFieldValue] && errors[errorFieldValue]?.type === 'required' && (
-          <p className="er-mes">This field is required</p>
+          <p className="er-mes" data-testid="userNameErMes">
+            This field is required
+          </p>
         )}
         {errors[errorFieldValue] && errors[errorFieldValue]?.type === 'minLength' && (
           <p className="er-mes">{errorMessage}</p>

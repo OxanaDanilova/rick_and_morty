@@ -41,7 +41,9 @@ export const Agreement = <TFormValues extends Record<string, unknown>>({
         {...(register && register(name, rules))}
       />
       {errors.agreement && errors.agreement.type === 'required' && (
-        <p className="er-mes">This field is required</p>
+        <p className="er-mes" data-testid="agreementErMes">
+          This field is required
+        </p>
       )}
     </div>
   );
