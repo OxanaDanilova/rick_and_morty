@@ -1,4 +1,4 @@
-import React from 'react';
+/* import React from 'react';
 import { render, screen } from '@testing-library/react';
 import UserName from './UserName';
 
@@ -28,3 +28,4 @@ describe('Check User Name', () => {
     expect(screen.getByText('First Name schould contain more than 1 letter.')).toBeInTheDocument();
   });
 });
+ */

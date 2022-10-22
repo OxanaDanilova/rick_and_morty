@@ -1,21 +1,60 @@
 import React from 'react';
+import {
+  FieldErrorsImpl,
+  RegisterOptions,
+  UseFormRegister,
+  Path,
+  FieldValues,
+} from 'react-hook-form';
 import './UserName.css';
 
-interface MyProps {
-  label: string;
+export type FormInputProps<TFormValues extends FieldValues> = {
+  name: Path<TFormValues>;
   errorMessage: string;
-  isValid: boolean;
-  reference: React.RefObject<HTMLInputElement>;
-}
+  label: string;
+  rules?: RegisterOptions;
+  register: UseFormRegister<TFormValues>;
+  errors: Partial<
+    FieldErrorsImpl<{
+      fname: string;
+      lname: string;
+      dob: string;
+      country: string;
+      gender: string;
+      avatar: FileList;
+      agreement: string;
+    }>
+  >;
+};
 
-export default function UserName({ label, errorMessage, isValid, reference }: MyProps) {
+export const UserName = <TFormValues extends Record<string, unknown>>({
+  name,
+  label,
+  errorMessage,
+  register,
+  rules,
+  errors,
+  ...props
+}: FormInputProps<TFormValues>): JSX.Element => {
+  const errorFieldValue = name === 'fname' ? 'fname' : 'lname';
   return (
     <div className="nameWrapper">
       <label>{label}</label>
       <div className="input-wrapper">
-        <input data-testid="formusername" ref={reference} type="text" id="fname" />
-        {!isValid && <p className="er-mes">{errorMessage}</p>}
+        <input
+          type="text"
+          data-testid="formusername"
+          id="fname"
+          {...props}
+          {...(register && register(name, rules))}
+        />
+        {errors[errorFieldValue] && errors[errorFieldValue]?.type === 'required' && (
+          <p className="er-mes">This field is required</p>
+        )}
+        {errors[errorFieldValue] && errors[errorFieldValue]?.type === 'minLength' && (
+          <p className="er-mes">{errorMessage}</p>
+        )}
       </div>
     </div>
   );
-}
+};

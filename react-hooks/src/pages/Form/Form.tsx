@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import '../../FormTest.css';
+import { UserName } from 'components/UserName/UserName';
+
 type FormValues = {
   fname: string;
   lname: string;
@@ -32,8 +34,7 @@ export default function Form({ createCard }: MyProps) {
     reset,
   } = useForm<FormValues>();
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(Object.entries(errors));
-    console.log(data);
+    console.log('data', data);
     const userAvatar = URL.createObjectURL(data.avatar[0]);
     createCard({
       firstName: data.fname,
@@ -57,7 +58,24 @@ export default function Form({ createCard }: MyProps) {
       <p className="createCardMes" style={{ opacity: showCreateCardMes ? '100%' : '0' }}>
         The card was created.
       </p>
-      <div className="nameWrapper">
+      <UserName
+        name="fname"
+        label="First Name"
+        register={register}
+        rules={{ required: true, minLength: 2 }}
+        errors={errors}
+        errorMessage="First Name schould contain more than 1 letter."
+      />
+      <UserName
+        name="lname"
+        label="Last Name"
+        register={register}
+        rules={{ required: true, minLength: 2 }}
+        errors={errors}
+        errorMessage="Last Name schould contain more than 1 letter."
+      />
+
+      {/*  <div className="nameWrapper">
         <label>First name</label>
         <div className="input-wrapper">
           <input
@@ -73,24 +91,25 @@ export default function Form({ createCard }: MyProps) {
             <p className="er-mes">First name should be more than 1 letter</p>
           )}
         </div>
-      </div>
-      <div className="nameWrapper">
-        <label>Last name</label>
-        <div className="input-wrapper">
-          <input
-            data-testid="formusername"
-            type="text"
-            id="lname"
-            {...register('lname', { required: true, minLength: 2 })}
-          />
-          {errors.lname && errors.lname.type === 'required' && (
-            <p className="er-mes">This is required</p>
-          )}
-          {errors.lname && errors.lname.type === 'minLength' && (
-            <p className="er-mes">Last name should be more than 1 letter</p>
-          )}
+      </div> 
+        <div className="nameWrapper">
+          <label>Last name</label>
+          <div className="input-wrapper">
+            <input
+              data-testid="formusername"
+              type="text"
+              id="lname"
+              {...register('lname', { required: true, minLength: 2 })}
+            />
+            {errors.lname && errors.lname.type === 'required' && (
+              <p className="er-mes">This is required</p>
+            )}
+            {errors.lname && errors.lname.type === 'minLength' && (
+              <p className="er-mes">Last name should be more than 1 letter</p>
+            )}
+          </div>
         </div>
-      </div>
+        */}
 
       <div className="birthdayWrapper">
         <label>Birthday</label>
@@ -173,7 +192,7 @@ export default function Form({ createCard }: MyProps) {
 // import Birthday from 'components/Birthday/Birthday';
 // import Country from 'components/Country/Country';
 // import Gender from 'components/Gender/Gender';
-// import UserName from 'components/UserName/UserName';
+
 // import Agreement from 'components/Agreement/Agreement';
 // import React, { useState } from 'react';
 // import './Form.css';
