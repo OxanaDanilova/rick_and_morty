@@ -13,10 +13,12 @@ describe('Check User Name', () => {
   it('check error message', async () => {
     const createCard = jest.fn();
     render(<Form createCard={createCard} />);
+    const firstNameInput = screen.getAllByTestId('formusername')[0];
+    userEvent.type(firstNameInput, 't');
+    userEvent.clear(firstNameInput);
     const submitBtn = screen.getByText('Create Card');
     userEvent.click(submitBtn);
     expect(await screen.findAllByTestId('userNameErMes')).toHaveLength(2);
-    const firstNameInput = screen.getAllByTestId('formusername')[0];
     userEvent.type(firstNameInput, 't');
     expect(
       await screen.findByText('First Name schould contain more than 1 letter.')

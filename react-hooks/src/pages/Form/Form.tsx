@@ -31,6 +31,7 @@ type MyProps = {
 
 export default function Form({ createCard }: MyProps) {
   const [showCreateCardMes, setShowCreateMes] = useState<boolean>(false);
+  const [initialForm, setInitialForm] = useState<boolean>(true);
 
   const {
     register,
@@ -38,8 +39,14 @@ export default function Form({ createCard }: MyProps) {
     formState: { errors },
     reset,
   } = useForm<FormValues>();
+
+  const onChange = () => {
+    if (initialForm) {
+      setInitialForm(false);
+    }
+  };
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log('data', data);
     const userAvatar = URL.createObjectURL(data.avatar[0]);
     createCard({
       firstName: data.fname,
@@ -50,6 +57,7 @@ export default function Form({ createCard }: MyProps) {
       avatar: userAvatar,
     });
     setShowCreateMes(true);
+    setInitialForm(true);
 
     setTimeout(() => {
       setShowCreateMes(false);
@@ -59,7 +67,7 @@ export default function Form({ createCard }: MyProps) {
   };
 
   return (
-    <form id="createCardForm" onSubmit={handleSubmit(onSubmit)}>
+    <form id="createCardForm" onSubmit={handleSubmit(onSubmit)} onChange={onChange}>
       <p className="createCardMes" style={{ opacity: showCreateCardMes ? '100%' : '0' }}>
         The card was created.
       </p>
@@ -88,7 +96,7 @@ export default function Form({ createCard }: MyProps) {
         <input
           type="submit"
           value="Create Card"
-          disabled={Object.entries(errors).length ? true : false}
+          disabled={initialForm || Object.entries(errors).length ? true : false}
         />
         <input type="reset" value="Reset" />
       </div>

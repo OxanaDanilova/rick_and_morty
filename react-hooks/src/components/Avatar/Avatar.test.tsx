@@ -12,6 +12,8 @@ describe('Check avatar', () => {
   it('check error message', async () => {
     const createCard = jest.fn();
     render(<Form createCard={createCard} />);
+    const firstNameInput = screen.getAllByTestId('formusername')[0];
+    userEvent.type(firstNameInput, 't');
     const submitBtn = screen.getByText('Create Card');
     userEvent.click(submitBtn);
     expect(await screen.findByTestId('avatarErMes')).toBeInTheDocument();
