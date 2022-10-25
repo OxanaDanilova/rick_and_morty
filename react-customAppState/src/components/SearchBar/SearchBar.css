@@ -29,3 +29,45 @@
   top: 0.8rem;
   left: 0.7rem;
 }
+
+.panel-wrapper {
+  display: flex;
+  width: 50%;
+  min-width: 300px;
+  margin: 1rem auto;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination-wrapper {
+  display: flex;
+}
+.pagination-wrapper > button {
+  color: white;
+  background-color: rgba(137, 43, 226, 0.757);
+  font-size: 1.1rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.pagination-wrapper > button:disabled {
+  color: white;
+  background-color: #aaa;
+  font-size: 1.1rem;
+}
+
+.sorting-wrapper {
+  display: flex;
+  align-items: center;
+  color: blueviolet;
+  font-size: 1.1rem;
+}
+
+.sorting-wrapper > select {
+  padding: 0.5rem;
+  margin-left: 0.5rem;
+  border-color: blueviolet;
+  border-radius: 0.4rem;
+  outline: none;
+  cursor: pointer;
+}

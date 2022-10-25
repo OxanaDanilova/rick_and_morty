@@ -184,33 +184,35 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
         <GoSearch className="search-icon" />
         <input type="text" name="search" ref={inputRef} placeholder="Search" />
       </form>
-      <div className="sorting-wrapper">
-        <label htmlFor="sort">Sorting by</label>
-        <select id="sort" onClick={(e) => handleSort(e)}>
-          <option></option>
-          <option>Name A-Z</option>
-          <option>Name Z-A</option>
-          <option>Species A-Z</option>
-          <option>Species Z-A</option>
-          <option>Status A-Z</option>
-          <option>Status Z-A</option>
-        </select>
-      </div>
-      <div className="pagination-wrapper">
-        <button
-          disabled={info && info.prev ? false : true}
-          onClick={() => paginationHandle('prev')}
-        >
-          Prev
-        </button>
-        <input type="number" name="currentPage" id="" />
-        <button
-          disabled={info && info.next ? false : true}
-          onClick={() => paginationHandle('next')}
-        >
-          Next
-        </button>
-      </div>
+      <section className="panel-wrapper">
+        <div className="sorting-wrapper">
+          <label htmlFor="sort">Sorting by</label>
+          <select id="sort" onClick={(e) => handleSort(e)}>
+            <option></option>
+            <option>Name A-Z</option>
+            <option>Name Z-A</option>
+            <option>Species A-Z</option>
+            <option>Species Z-A</option>
+            <option>Status A-Z</option>
+            <option>Status Z-A</option>
+          </select>
+        </div>
+        <div className="pagination-wrapper">
+          <button
+            disabled={info && info.prev ? false : true}
+            onClick={() => paginationHandle('prev')}
+          >
+            Prev
+          </button>
+          <input type="number" name="currentPage" id="" />
+          <button
+            disabled={info && info.next ? false : true}
+            onClick={() => paginationHandle('next')}
+          >
+            Next
+          </button>
+        </div>
+      </section>
     </>
   );
 }
