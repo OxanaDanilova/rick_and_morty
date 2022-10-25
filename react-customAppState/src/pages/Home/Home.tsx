@@ -10,6 +10,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const changeArr = (newArr: Character[], hasError: boolean) => {
+    console.log(newArr);
     setDataArr(newArr);
     setHasError(hasError);
   };
