@@ -18,6 +18,9 @@ type MyProps = {
 export default function SearchBar({ changeLoading, changeArr }: MyProps) {
   const [info, setInfo] = useState<Info | null>(null);
   const [unsortedArr, setUnsortedArr] = useState<Character[]>([]);
+  const [allPages, setAllPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [cardsPerPage, setCardsPerPage] = useState<number>(20);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -28,8 +31,10 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
 
   const paginationHandle = (direction: string) => {
     if (info && direction === 'next' && info.next) {
+      setCurrentPage(currentPage + 1);
       getDataFromApi(info.next);
     } else if (info && direction === 'prev' && info.prev) {
+      setCurrentPage(currentPage - 1);
       getDataFromApi(info.prev);
     }
   };
@@ -40,6 +45,7 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
       const response = await fetch(url);
       const data = await response.json();
       changeInfo(data.info);
+      setAllPages(data.info.pages);
       changeLoading(false);
       if (!data.results) {
         throw new Error();
@@ -178,6 +184,46 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
     }
   };
 
+  const changeCardsPerPage = (e: React.FormEvent) => {
+    const target = e.target as HTMLInputElement;
+    if (target.value) {
+      setCardsPerPage(+target.value);
+      console.log('cards per page', target.value);
+      const calcAllPages = info && Math.ceil(info.count / +target.value);
+      calcAllPages && setAllPages(calcAllPages);
+      console.log('all pages', calcAllPages);
+      const newArrNumb = [];
+      for (let i = 1; i <= cardsPerPage; i++) {
+        const newItem = cardsPerPage * (currentPage - 1) + i;
+        newArrNumb.push(newItem);
+      }
+      console.log(newArrNumb);
+    }
+  };
+  const changeAllPages = (e: React.FormEvent) => {
+    const target = e.target as HTMLInputElement;
+    if (target.value) {
+      setAllPages(+target.value);
+      const calcCardsPerPage = info && Math.ceil(info.count / +target.value);
+      calcCardsPerPage && setCardsPerPage(calcCardsPerPage);
+      console.log('CardsPerPage', calcCardsPerPage);
+    }
+  };
+
+  const changeCurrentPage = (e: React.FormEvent) => {
+    const target = e.target as HTMLInputElement;
+    if (target.value) {
+      setCurrentPage(+target.value);
+      if (inputRef.current) {
+        getDataFromApi(
+          `https://rickandmortyapi.com/api/character/?page=${+target.value}&name=${
+            inputRef.current.value
+          }`
+        );
+      }
+    }
+  };
+
   return (
     <>
       <form className="search-form" onSubmit={(e) => submitForm(e)}>
@@ -204,13 +250,42 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
           >
             Prev
           </button>
-          <input type="number" name="currentPage" id="" />
+          <input
+            type="number"
+            name="currentPage"
+            id="currentPage"
+            value={currentPage}
+            max={allPages}
+            min={1}
+            onChange={(e) => changeCurrentPage(e)}
+          />
           <button
             disabled={info && info.next ? false : true}
             onClick={() => paginationHandle('next')}
           >
             Next
           </button>
+        </div>
+        <div>
+          <label htmlFor="allPages">All pages</label>
+          <input
+            type="number"
+            id="allPages"
+            name="allPages"
+            value={allPages}
+            max={info && info.count ? info.count : 1}
+            onChange={(e) => changeAllPages(e)}
+          />
+          <label htmlFor="cardsPerPage">Cards per page</label>
+          <input
+            type="number"
+            name="cardsPerPage"
+            id="cardsPerPage"
+            min={1}
+            max={20}
+            value={cardsPerPage}
+            onChange={(e) => changeCardsPerPage(e)}
+          />
         </div>
       </section>
     </>
