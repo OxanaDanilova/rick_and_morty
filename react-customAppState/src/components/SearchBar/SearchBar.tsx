@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { GoSearch } from 'react-icons/go';
 import './SearchBar.css';
 import Character from 'types';
+import { AppContext } from 'App';
 
 type Info = {
   count: number;
@@ -21,6 +22,9 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
   const [allPages, setAllPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState<number>(20);
+
+  const myContext = useContext(AppContext);
+  const { dataArr, setDataArr } = myContext;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -70,7 +74,9 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
     const searchItem = inputRef.current;
     if (localStorageData && searchItem) {
       searchItem.value = localStorageData;
-      getDataFromApi(`https://rickandmortyapi.com/api/character/?name=${localStorageData}`);
+      if (!dataArr.length) {
+        getDataFromApi(`https://rickandmortyapi.com/api/character/?name=${localStorageData}`);
+      }
     } else {
       getDataFromApi(`https://rickandmortyapi.com/api/character`);
     }
