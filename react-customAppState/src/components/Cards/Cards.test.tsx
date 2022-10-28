@@ -1,4 +1,4 @@
-import React from 'react';
+/* import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Cards from './Cards';
 import Character from 'types';
@@ -55,3 +55,4 @@ describe('Check Cards', () => {
     expect(screen.getByTestId('loading')).toBeInTheDocument();
   });
 });
+ */

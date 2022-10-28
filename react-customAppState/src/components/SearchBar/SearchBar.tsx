@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { GoSearch } from 'react-icons/go';
 import './SearchBar.css';
-import Character from 'types';
 import { AppContext } from 'App';
 
 type Info = {
@@ -11,14 +10,8 @@ type Info = {
   prev: null | string;
 };
 
-type MyProps = {
-  changeArr: (arr: Character[], hasError: boolean) => void;
-  changeLoading: (isLoading: boolean) => void;
-};
-
-export default function SearchBar({ changeLoading, changeArr }: MyProps) {
+export default function SearchBar() {
   const [info, setInfo] = useState<Info | null>(null);
-  const [unsortedArr, setUnsortedArr] = useState<Character[]>([]);
   const [allPages, setAllPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState<number>(20);
@@ -45,20 +38,25 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
 
   const getDataFromApi = async (url: string) => {
     try {
-      changeLoading(true);
+      dispatch({ type: 'isLoading', payload: { ...state, isLoading: true } });
       const response = await fetch(url);
       const data = await response.json();
       changeInfo(data.info);
       setAllPages(data.info.pages);
-      changeLoading(false);
+      dispatch({ type: 'isLoading', payload: { ...state, isLoading: false } });
       if (!data.results) {
         throw new Error();
       } else {
-        changeArr(data.results, false);
-        setUnsortedArr(data.results);
+        dispatch({ type: 'search-cards', payload: { ...state, dataArr: data.results } });
+        dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
+        dispatch({ type: 'unsorted-cards', payload: { ...state, dataArr: data.results } });
+        if (state.sorting) {
+          sortCards(state.sorting);
+        }
       }
     } catch (error) {
-      changeArr([], true);
+      dispatch({ type: 'search-cards', payload: { ...state, dataArr: [] } });
+      dispatch({ type: 'hasError', payload: { ...state, hasError: true } });
     }
   };
 
@@ -87,106 +85,107 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
       }
     };
   }, []);
+  const sortCards = (sorting: string) => {
+    switch (sorting) {
+      case 'Name A-Z': {
+        const sortedData = state.unsortedCards.sort((a, b) => {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
+
+        dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
+        dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
+        break;
+      }
+
+      case 'Name Z-A': {
+        const sortedData = state.unsortedCards.sort((a, b) => {
+          if (a.name > b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
+        dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
+        dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
+        break;
+      }
+      case 'Species A-Z': {
+        const sortedData = state.unsortedCards.sort((a, b) => {
+          if (a.species < b.species) {
+            return -1;
+          }
+          if (a.species > b.species) {
+            return 1;
+          }
+          return 0;
+        });
+        dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
+        dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
+        break;
+      }
+
+      case 'Species Z-A': {
+        const sortedData = state.unsortedCards.sort((a, b) => {
+          if (a.species > b.species) {
+            return -1;
+          }
+          if (a.species > b.species) {
+            return 1;
+          }
+          return 0;
+        });
+        dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
+        dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
+        break;
+      }
+      case 'Status A-Z': {
+        const sortedData = state.unsortedCards.sort((a, b) => {
+          if (a.status < b.status) {
+            return -1;
+          }
+          if (a.status > b.status) {
+            return 1;
+          }
+          return 0;
+        });
+
+        dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
+        dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
+        break;
+      }
+
+      case 'Status Z-A': {
+        const sortedData = state.unsortedCards.sort((a, b) => {
+          if (a.status > b.status) {
+            return -1;
+          }
+          if (a.status > b.status) {
+            return 1;
+          }
+          return 0;
+        });
+        dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
+        dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
   const handleSort = (e: React.FormEvent) => {
     const target = e.target as HTMLSelectElement;
     if (target && target.value) {
-      switch (target.value) {
-        case 'Name A-Z': {
-          const sortedData = unsortedArr.sort((a, b) => {
-            if (a.name < b.name) {
-              return -1;
-            }
-            if (a.name > b.name) {
-              return 1;
-            }
-            return 0;
-          });
-
-          console.log(sortedData);
-          changeArr([...sortedData], false);
-          break;
-        }
-
-        case 'Name Z-A': {
-          const sortedData = unsortedArr.sort((a, b) => {
-            if (a.name > b.name) {
-              return -1;
-            }
-            if (a.name > b.name) {
-              return 1;
-            }
-            return 0;
-          });
-
-          console.log(sortedData);
-          changeArr([...sortedData], false);
-          break;
-        }
-        case 'Species A-Z': {
-          const sortedData = unsortedArr.sort((a, b) => {
-            if (a.species < b.species) {
-              return -1;
-            }
-            if (a.species > b.species) {
-              return 1;
-            }
-            return 0;
-          });
-
-          console.log(sortedData);
-          changeArr([...sortedData], false);
-          break;
-        }
-
-        case 'Species Z-A': {
-          const sortedData = unsortedArr.sort((a, b) => {
-            if (a.species > b.species) {
-              return -1;
-            }
-            if (a.species > b.species) {
-              return 1;
-            }
-            return 0;
-          });
-
-          console.log(sortedData);
-          changeArr([...sortedData], false);
-          break;
-        }
-        case 'Status A-Z': {
-          const sortedData = unsortedArr.sort((a, b) => {
-            if (a.status < b.status) {
-              return -1;
-            }
-            if (a.status > b.status) {
-              return 1;
-            }
-            return 0;
-          });
-
-          console.log(sortedData);
-          changeArr([...sortedData], false);
-          break;
-        }
-
-        case 'Status Z-A': {
-          const sortedData = unsortedArr.sort((a, b) => {
-            if (a.status > b.status) {
-              return -1;
-            }
-            if (a.status > b.status) {
-              return 1;
-            }
-            return 0;
-          });
-
-          console.log(sortedData);
-          changeArr([...sortedData], false);
-          break;
-        }
-        default:
-          break;
-      }
+      dispatch({ type: 'sorting', payload: { ...state, sorting: target.value } });
+      sortCards(target.value);
     }
   };
 
@@ -239,7 +238,7 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
       <section className="panel-wrapper">
         <div className="sorting-wrapper">
           <label htmlFor="sort">Sorting by</label>
-          <select id="sort" onClick={(e) => handleSort(e)}>
+          <select id="sort" onChange={(e) => handleSort(e)} value={state.sorting}>
             <option></option>
             <option>Name A-Z</option>
             <option>Name Z-A</option>

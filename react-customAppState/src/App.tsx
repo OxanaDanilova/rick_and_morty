@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useReducer } from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import About from './pages/About/About';
@@ -9,16 +9,30 @@ import Character from 'types';
 import CardPage from 'components/Cards/Card/CardPage/CardPage';
 
 interface MyAction {
-  type: 'search-cards';
-  payload: { dataArr: Character[] };
+  type: 'search-cards' | 'hasError' | 'isLoading' | 'sorting' | 'unsorted-cards';
+  payload: {
+    dataArr: Character[];
+    hasError: boolean;
+    isLoading: boolean;
+    sorting: string;
+    unsortedCards: Character[];
+  };
 }
 interface MyState {
   dataArr: Character[];
+  hasError: boolean;
+  isLoading: boolean;
+  sorting: string;
+  unsortedCards: Character[];
 }
 
 export type GlobalContent = {
   state: {
     dataArr: Character[];
+    hasError: boolean;
+    isLoading: boolean;
+    sorting: string;
+    unsortedCards: Character[];
   };
   dispatch: (action: MyAction) => void;
 };
@@ -29,19 +43,35 @@ export const reducer = (state: MyState, action: MyAction) => {
     case 'search-cards': {
       return { ...state, dataArr: payload.dataArr };
     }
+    case 'unsorted-cards': {
+      return { ...state, unsortedCards: payload.dataArr };
+    }
+    case 'hasError': {
+      return { ...state, hasError: payload.hasError };
+    }
+    case 'isLoading': {
+      return { ...state, isLoading: payload.isLoading };
+    }
+    case 'sorting': {
+      return { ...state, sorting: payload.sorting };
+    }
     default:
       return state;
   }
 };
 
 export const AppContext = React.createContext<GlobalContent>({
-  state: { dataArr: [] },
+  state: { dataArr: [], hasError: false, isLoading: false, sorting: '', unsortedCards: [] },
   dispatch: () => {},
 });
 
 function App() {
   const initialState = {
     dataArr: [],
+    hasError: false,
+    isLoading: false,
+    sorting: '',
+    unsortedCards: [],
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
