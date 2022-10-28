@@ -1,36 +1,35 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import Character from 'types';
 import './CardPage.css';
 import { AppContext } from 'App';
+import { Link } from 'react-router-dom';
 
 export default function CardPage() {
+  const navigate = useNavigate();
   const [character, setCharacter] = useState<Character | null>(null);
   const { id } = useParams();
 
   const myContext = useContext(AppContext);
-  const { dataArr, setDataArr } = myContext;
+  const { dataArr } = myContext;
   console.log('dataArr', dataArr);
   useEffect(() => {
     if (id) {
       const characterContent = dataArr.find((character: Character) => character.id == +id);
       console.log(characterContent);
-      characterContent && setCharacter(characterContent);
+      characterContent ? setCharacter(characterContent) : navigate('/');
+      return;
     }
-  }, [dataArr, id]);
+  }, [dataArr, id, navigate]);
 
-  /*   if (!isVisible) return null;
-  const closeModal = (event: React.MouseEvent<HTMLElement>) => {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.modal')) {
-      changeModal(null, false);
-    } 
-  };*/
   return (
-    <section>
+    <section className="card-page-section">
+      <Link to="/" className="backBtn">
+        Back
+      </Link>
       {character && (
-        <li className="card-wrapper modal" data-testid="modal">
-          <img className="card-pic" src={character.image} alt="Picture for card" />
+        <li className="card-page-wrapper">
+          <img src={character.image} alt="Picture for card" />
           <p>Name: {character.name}</p>
           <p>Species: {character.species}</p>
           <p>Gender: {character.gender}</p>
