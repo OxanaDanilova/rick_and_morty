@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router';
 import Character from 'types';
 
 interface MyProps {
@@ -8,8 +9,9 @@ interface MyProps {
 }
 
 export default function Card({ character, changeModal }: MyProps) {
+  const navigate = useNavigate();
   return (
-    <li className="card-wrapper" data-testid="card" onClick={() => changeModal(character, true)}>
+    <li className="card-wrapper" data-testid="card" onClick={() => navigate(`/${character.id}`)}>
       <img className="card-pic" src={character.image} alt="Picture for card" />
       <h4>Name: {character.name}</h4>
     </li>

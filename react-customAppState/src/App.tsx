@@ -6,6 +6,7 @@ import NotFound from './pages/NotFound/NotFound';
 import './App.css';
 import FormPage from 'pages/Form/FormPage';
 import Character from 'types';
+import CardPage from 'components/Cards/Card/CardPage/CardPage';
 
 export type GlobalContent = {
   dataArr: Character[];
@@ -43,6 +44,7 @@ function App() {
         </nav>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/:id" element={<CardPage />} />
           <Route path="/form" element={<FormPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/*" element={<NotFound />} />
