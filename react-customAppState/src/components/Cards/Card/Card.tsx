@@ -5,10 +5,9 @@ import Character from 'types';
 interface MyProps {
   character: Character;
   id: number;
-  changeModal: (character: Character, isVisible: boolean) => void;
 }
 
-export default function Card({ character, changeModal }: MyProps) {
+export default function Card({ character }: MyProps) {
   const navigate = useNavigate();
   return (
     <li className="card-wrapper" data-testid="card" onClick={() => navigate(`/${character.id}`)}>

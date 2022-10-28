@@ -11,16 +11,16 @@ export default function CardPage() {
   const { id } = useParams();
 
   const myContext = useContext(AppContext);
-  const { dataArr } = myContext;
-  console.log('dataArr', dataArr);
+  const { state } = myContext;
+  console.log('dataArr', state.dataArr);
   useEffect(() => {
     if (id) {
-      const characterContent = dataArr.find((character: Character) => character.id == +id);
+      const characterContent = state.dataArr.find((character: Character) => character.id == +id);
       console.log(characterContent);
       characterContent ? setCharacter(characterContent) : navigate('/');
       return;
     }
-  }, [dataArr, id, navigate]);
+  }, [state.dataArr, id, navigate]);
 
   return (
     <section className="card-page-section">

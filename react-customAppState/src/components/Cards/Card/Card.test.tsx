@@ -4,7 +4,6 @@ import Card from './Card';
 
 describe('Check Card', () => {
   it('check rendering Card', () => {
-    const changeModal = () => true;
     const character = {
       gender: 'Male',
       id: 1,
@@ -18,7 +17,7 @@ describe('Check Card', () => {
       species: 'Human',
       status: 'Alive',
     };
-    render(<Card character={character} id={1} key={1} changeModal={changeModal} />);
+    render(<Card character={character} id={1} key={1} />);
 
     const card = screen.getByTestId('card');
     expect(card).toBeInTheDocument();

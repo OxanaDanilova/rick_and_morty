@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import About from './pages/About/About';
@@ -8,20 +8,44 @@ import FormPage from 'pages/Form/FormPage';
 import Character from 'types';
 import CardPage from 'components/Cards/Card/CardPage/CardPage';
 
-export type GlobalContent = {
+interface MyAction {
+  type: 'search-cards';
+  payload: { dataArr: Character[] };
+}
+interface MyState {
   dataArr: Character[];
-  setDataArr: (dataArr: Character[]) => void;
+}
+
+export type GlobalContent = {
+  state: {
+    dataArr: Character[];
+  };
+  dispatch: (action: MyAction) => void;
+};
+
+export const reducer = (state: MyState, action: MyAction) => {
+  const { type, payload } = action;
+  switch (type) {
+    case 'search-cards': {
+      return { ...state, dataArr: payload.dataArr };
+    }
+    default:
+      return state;
+  }
 };
 
 export const AppContext = React.createContext<GlobalContent>({
-  dataArr: [],
-  setDataArr: () => {},
+  state: { dataArr: [] },
+  dispatch: () => {},
 });
 
 function App() {
-  const [dataArr, setDataArr] = useState<Character[]>([]);
+  const initialState = {
+    dataArr: [],
+  };
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
-    <AppContext.Provider value={{ dataArr, setDataArr }}>
+    <AppContext.Provider value={{ state, dispatch }}>
       <div className="App">
         <nav>
           <ul className="nav-menu">

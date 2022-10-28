@@ -24,7 +24,7 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
   const [cardsPerPage, setCardsPerPage] = useState<number>(20);
 
   const myContext = useContext(AppContext);
-  const { dataArr, setDataArr } = myContext;
+  const { state, dispatch } = myContext;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -74,7 +74,7 @@ export default function SearchBar({ changeLoading, changeArr }: MyProps) {
     const searchItem = inputRef.current;
     if (localStorageData && searchItem) {
       searchItem.value = localStorageData;
-      if (!dataArr.length) {
+      if (!state.dataArr.length) {
         getDataFromApi(`https://rickandmortyapi.com/api/character/?name=${localStorageData}`);
       }
     } else {

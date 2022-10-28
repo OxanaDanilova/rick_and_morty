@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Card from './Card/Card';
 import './Cards.css';
 import Character from 'types';
-import Modal from './Card/Modal/Modal';
 
 type Props = {
   dataArr: Character[];
@@ -11,13 +10,13 @@ type Props = {
 };
 
 export default function Cards({ dataArr, hasError, isLoading }: Props) {
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [modalCharacter, setModalCharacter] = useState<Character | null>(null);
-
+  /*   const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalCharacter, setModalCharacter] = useState<Character | null>(null); */
+  /* 
   const changeModal = (character: Character | null, isVisible: boolean) => {
     setShowModal(isVisible);
     setModalCharacter(character);
-  };
+  }; */
   return (
     <div>
       {isLoading ? (
@@ -39,10 +38,9 @@ export default function Cards({ dataArr, hasError, isLoading }: Props) {
               <h3>Cards</h3>
               <ul className="cards" data-testid="cards">
                 {dataArr.map((character: Character, id: number) => (
-                  <Card character={character} id={id} key={id} changeModal={changeModal} />
+                  <Card character={character} id={id} key={id} />
                 ))}
               </ul>
-              <Modal character={modalCharacter} isVisible={showModal} changeModal={changeModal} />
             </>
           )}
         </>
