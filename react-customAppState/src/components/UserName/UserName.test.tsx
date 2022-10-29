@@ -5,14 +5,12 @@ import userEvent from '@testing-library/user-event';
 
 describe('Check User Name', () => {
   it('check of the rendering Agreement checkbox', () => {
-    const createCard = jest.fn();
-    render(<Form createCard={createCard} />);
+    render(<Form />);
     expect(screen.getByText('First Name')).toBeInTheDocument();
     expect(screen.getByText('Last Name')).toBeInTheDocument();
   });
   it('check error message', async () => {
-    const createCard = jest.fn();
-    render(<Form createCard={createCard} />);
+    render(<Form />);
     const firstNameInput = screen.getAllByTestId('formusername')[0];
     userEvent.type(firstNameInput, 't');
     userEvent.clear(firstNameInput);

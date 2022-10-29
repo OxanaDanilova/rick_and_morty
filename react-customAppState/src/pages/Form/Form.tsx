@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { UserName } from 'components/UserName/UserName';
 import { Avatar } from 'components/Avatar/Avatar';
@@ -6,6 +6,7 @@ import { Birthday } from 'components/Birthday/Birthday';
 import { Country } from 'components/Country/Country';
 import { Gender } from 'components/Gender/Gender';
 import { Agreement } from 'components/Agreement/Agreement';
+import { AppContext } from 'App';
 import './Form.css';
 
 type FormValues = {
@@ -14,50 +15,98 @@ type FormValues = {
   dob: string;
   country: string;
   gender: string;
-  avatar: FileList;
+  avatar: File[];
   agreement: string;
 };
-interface Card {
-  firstName: string;
-  lastName: string;
-  birthday: string;
-  country: string;
-  avatar: string;
-  gender: string;
-}
-type MyProps = {
-  createCard: (card: Card) => void;
-};
 
-export default function Form({ createCard }: MyProps) {
+export default function Form() {
+  const myContext = useContext(AppContext);
+  const { state, dispatch } = myContext;
+
   const [showCreateCardMes, setShowCreateMes] = useState<boolean>(false);
-  const [initialForm, setInitialForm] = useState<boolean>(true);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
+    getValues,
+    formState: { errors },
+    setValue,
   } = useForm<FormValues>();
 
-  const onChange = () => {
-    if (initialForm) {
-      setInitialForm(false);
+  useEffect(() => {
+    if (!state.initialForm) {
+      console.log('statefor', state.formValues);
+      setValue('fname', state.formValues.fname);
+      setValue('lname', state.formValues.lname);
+      setValue('dob', state.formValues.dob);
+      setValue('country', state.formValues.country);
+      setValue('gender', state.formValues.gender);
+      setValue('agreement', state.formValues.agreement);
+      if (state.formValues.avatar) {
+        setValue('avatar', [state.formValues.avatar[0]]);
+      }
     }
+
+    return () => {
+      dispatch({
+        type: 'formValues',
+        payload: {
+          ...state,
+          formValues: getValues(),
+        },
+      });
+    };
+  }, []);
+
+  const onChange = () => {
+    if (state.initialForm) {
+      dispatch({
+        type: 'initialForm',
+        payload: {
+          ...state,
+          initialForm: false,
+        },
+      });
+    }
+    console.log('getValues', getValues);
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const userAvatar = URL.createObjectURL(data.avatar[0]);
-    createCard({
+    dispatch({
+      type: 'form-cards',
+      payload: {
+        ...state,
+        formCards: [
+          ...state.formCards,
+          {
+            firstName: data.fname,
+            lastName: data.lname,
+            birthday: data.dob,
+            country: data.country,
+            gender: data.gender ? 'Female' : 'Male',
+            avatar: userAvatar,
+          },
+        ],
+      },
+    });
+    /*    createCard({
       firstName: data.fname,
       lastName: data.lname,
       birthday: data.dob,
       country: data.country,
       gender: data.gender ? 'Female' : 'Male',
       avatar: userAvatar,
-    });
+    }); */
     setShowCreateMes(true);
-    setInitialForm(true);
+    dispatch({
+      type: 'initialForm',
+      payload: {
+        ...state,
+        initialForm: true,
+      },
+    });
 
     setTimeout(() => {
       setShowCreateMes(false);
@@ -96,7 +145,7 @@ export default function Form({ createCard }: MyProps) {
         <input
           type="submit"
           value="Create Card"
-          disabled={initialForm || Object.entries(errors).length ? true : false}
+          disabled={state.initialForm || Object.entries(errors).length ? true : false}
         />
         <input type="reset" value="Reset" />
       </div>

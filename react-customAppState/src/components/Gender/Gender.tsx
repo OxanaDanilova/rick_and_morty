@@ -19,7 +19,7 @@ type FormInputProps<TFormValues extends FieldValues> = {
       dob: string;
       country: string;
       gender: string;
-      avatar: FileList;
+      avatar: File[];
       agreement: string;
     }>
   >;

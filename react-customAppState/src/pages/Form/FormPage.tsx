@@ -1,26 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import FormCard from '../../components/FormCard/FormCard';
 import Form from './Form';
-
-interface Card {
-  firstName: string;
-  lastName: string;
-  birthday: string;
-  country: string;
-  avatar: string;
-  gender: string;
-}
+import { AppContext } from 'App';
 
 export default function FormPage() {
-  const [cards, setCards] = useState<Card[]>([]);
-  const createCard = (card: Card) => {
-    setCards([...cards, card]);
-  };
+  const myContext = useContext(AppContext);
+  const { state } = myContext;
+
   return (
     <div>
-      <Form createCard={createCard} />
+      <Form />
       <section className="formCardsWrapper">
-        {cards.length > 0 ? cards.map((formCard, id) => <FormCard key={id} card={formCard} />) : ''}
+        {state.formCards.length > 0
+          ? state.formCards.map((formCard, id) => <FormCard key={id} card={formCard} />)
+          : ''}
       </section>
     </div>
   );

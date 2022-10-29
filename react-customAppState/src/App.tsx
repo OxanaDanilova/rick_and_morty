@@ -8,6 +8,25 @@ import FormPage from 'pages/Form/FormPage';
 import Character from 'types';
 import CardPage from 'components/Cards/Card/CardPage/CardPage';
 
+type FormValues = {
+  fname: string;
+  lname: string;
+  dob: string;
+  country: string;
+  gender: string;
+  avatar: File[] | null;
+  agreement: string;
+};
+
+interface FormCard {
+  firstName: string;
+  lastName: string;
+  birthday: string;
+  country: string;
+  avatar: string;
+  gender: string;
+}
+
 type Info = {
   count: number;
   next: null | string;
@@ -25,7 +44,10 @@ interface MyAction {
     | 'info'
     | 'currentPage'
     | 'cardsPerPage'
-    | 'allPages';
+    | 'allPages'
+    | 'form-cards'
+    | 'formValues'
+    | 'initialForm';
   payload: {
     dataArr: Character[];
     hasError: boolean;
@@ -36,6 +58,9 @@ interface MyAction {
     currentPage: number;
     cardsPerPage: number;
     allPages: number;
+    formCards: FormCard[];
+    formValues: FormValues;
+    initialForm: boolean;
   };
 }
 interface MyState {
@@ -48,6 +73,9 @@ interface MyState {
   currentPage: number;
   cardsPerPage: number;
   allPages: number;
+  formCards: FormCard[];
+  formValues: FormValues;
+  initialForm: boolean;
 }
 
 export type GlobalContent = {
@@ -61,6 +89,9 @@ export type GlobalContent = {
     currentPage: number;
     cardsPerPage: number;
     allPages: number;
+    formCards: FormCard[];
+    formValues: FormValues;
+    initialForm: boolean;
   };
   dispatch: (action: MyAction) => void;
 };
@@ -70,6 +101,9 @@ export const reducer = (state: MyState, action: MyAction) => {
   switch (type) {
     case 'search-cards': {
       return { ...state, dataArr: [...payload.dataArr] };
+    }
+    case 'form-cards': {
+      return { ...state, formCards: payload.formCards };
     }
     case 'unsorted-cards': {
       return { ...state, unsortedCards: payload.dataArr };
@@ -95,6 +129,12 @@ export const reducer = (state: MyState, action: MyAction) => {
     case 'allPages': {
       return { ...state, allPages: payload.allPages };
     }
+    case 'formValues': {
+      return { ...state, formValues: payload.formValues };
+    }
+    case 'initialForm': {
+      return { ...state, initialForm: payload.initialForm };
+    }
     default:
       return state;
   }
@@ -111,6 +151,17 @@ export const AppContext = React.createContext<GlobalContent>({
     currentPage: 1,
     cardsPerPage: 20,
     allPages: 1,
+    formCards: [],
+    formValues: {
+      fname: '',
+      lname: '',
+      dob: '',
+      country: '',
+      gender: '',
+      avatar: null,
+      agreement: '',
+    },
+    initialForm: true,
   },
   dispatch: () => {},
 });
@@ -126,6 +177,17 @@ function App() {
     currentPage: 1,
     cardsPerPage: 20,
     allPages: 1,
+    formCards: [],
+    formValues: {
+      fname: '',
+      lname: '',
+      dob: '',
+      country: '',
+      gender: '',
+      avatar: null,
+      agreement: '',
+    },
+    initialForm: true,
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   return (

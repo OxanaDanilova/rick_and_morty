@@ -7,14 +7,7 @@ import { AppContext } from '../../App';
 export default function Cards() {
   const myContext = useContext(AppContext);
   const { state } = myContext;
-  console.log('context', myContext);
-  /*   const [showModal, setShowModal] = useState<boolean>(false);
-  const [modalCharacter, setModalCharacter] = useState<Character | null>(null); */
-  /* 
-  const changeModal = (character: Character | null, isVisible: boolean) => {
-    setShowModal(isVisible);
-    setModalCharacter(character);
-  }; */
+
   return (
     <div>
       {state.isLoading ? (
