@@ -1,38 +1,21 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import { GoSearch } from 'react-icons/go';
 import './SearchBar.css';
 import { AppContext } from 'App';
 
-type Info = {
-  count: number;
-  next: null | string;
-  pages: number;
-  prev: null | string;
-};
-
 export default function SearchBar() {
-  const [info, setInfo] = useState<Info | null>(null);
-  const [allPages, setAllPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [cardsPerPage, setCardsPerPage] = useState<number>(20);
-
   const myContext = useContext(AppContext);
   const { state, dispatch } = myContext;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const changeInfo = (resp: Info) => {
-    setInfo(resp);
-    console.log('response:', resp);
-  };
-
   const paginationHandle = (direction: string) => {
-    if (info && direction === 'next' && info.next) {
-      setCurrentPage(currentPage + 1);
-      getDataFromApi(info.next);
-    } else if (info && direction === 'prev' && info.prev) {
-      setCurrentPage(currentPage - 1);
-      getDataFromApi(info.prev);
+    if (state.info && direction === 'next' && state.info.next) {
+      dispatch({ type: 'currentPage', payload: { ...state, currentPage: state.currentPage + 1 } });
+      getDataFromApi(state.info.next);
+    } else if (state.info && direction === 'prev' && state.info.prev) {
+      dispatch({ type: 'currentPage', payload: { ...state, currentPage: state.currentPage - 1 } });
+      getDataFromApi(state.info.prev);
     }
   };
 
@@ -41,8 +24,8 @@ export default function SearchBar() {
       dispatch({ type: 'isLoading', payload: { ...state, isLoading: true } });
       const response = await fetch(url);
       const data = await response.json();
-      changeInfo(data.info);
-      setAllPages(data.info.pages);
+      dispatch({ type: 'info', payload: { ...state, info: data.info } });
+      dispatch({ type: 'allPages', payload: { ...state, allPages: data.info.pages } });
       dispatch({ type: 'isLoading', payload: { ...state, isLoading: false } });
       if (!data.results) {
         throw new Error();
@@ -192,14 +175,12 @@ export default function SearchBar() {
   const changeCardsPerPage = (e: React.FormEvent) => {
     const target = e.target as HTMLInputElement;
     if (target.value) {
-      setCardsPerPage(+target.value);
-      console.log('cards per page', target.value);
-      const calcAllPages = info && Math.ceil(info.count / +target.value);
-      calcAllPages && setAllPages(calcAllPages);
-      console.log('all pages', calcAllPages);
+      dispatch({ type: 'cardsPerPage', payload: { ...state, cardsPerPage: +target.value } });
+      const calcAllPages = state.info && Math.ceil(state.info.count / +target.value);
+      calcAllPages && dispatch({ type: 'allPages', payload: { ...state, allPages: calcAllPages } });
       const newArrNumb = [];
-      for (let i = 1; i <= cardsPerPage; i++) {
-        const newItem = cardsPerPage * (currentPage - 1) + i;
+      for (let i = 1; i <= state.cardsPerPage; i++) {
+        const newItem = state.cardsPerPage * (state.currentPage - 1) + i;
         newArrNumb.push(newItem);
       }
       console.log(newArrNumb);
@@ -208,17 +189,17 @@ export default function SearchBar() {
   const changeAllPages = (e: React.FormEvent) => {
     const target = e.target as HTMLInputElement;
     if (target.value) {
-      setAllPages(+target.value);
-      const calcCardsPerPage = info && Math.ceil(info.count / +target.value);
-      calcCardsPerPage && setCardsPerPage(calcCardsPerPage);
-      console.log('CardsPerPage', calcCardsPerPage);
+      dispatch({ type: 'allPages', payload: { ...state, allPages: +target.value } });
+      const calcCardsPerPage = state.info && Math.ceil(state.info.count / +target.value);
+      calcCardsPerPage &&
+        dispatch({ type: 'cardsPerPage', payload: { ...state, cardsPerPage: calcCardsPerPage } });
     }
   };
 
   const changeCurrentPage = (e: React.FormEvent) => {
     const target = e.target as HTMLInputElement;
     if (target.value) {
-      setCurrentPage(+target.value);
+      dispatch({ type: 'currentPage', payload: { ...state, currentPage: +target.value } });
       if (inputRef.current) {
         getDataFromApi(
           `https://rickandmortyapi.com/api/character/?page=${+target.value}&name=${
@@ -250,7 +231,7 @@ export default function SearchBar() {
         </div>
         <div className="pagination-wrapper">
           <button
-            disabled={info && info.prev ? false : true}
+            disabled={state.info && state.info.prev ? false : true}
             onClick={() => paginationHandle('prev')}
           >
             Prev
@@ -259,13 +240,13 @@ export default function SearchBar() {
             type="number"
             name="currentPage"
             id="currentPage"
-            value={currentPage}
-            max={allPages}
+            value={state.currentPage}
+            max={state.allPages}
             min={1}
             onChange={(e) => changeCurrentPage(e)}
           />
           <button
-            disabled={info && info.next ? false : true}
+            disabled={state.info && state.info.next ? false : true}
             onClick={() => paginationHandle('next')}
           >
             Next
@@ -277,8 +258,8 @@ export default function SearchBar() {
             type="number"
             id="allPages"
             name="allPages"
-            value={allPages}
-            max={info && info.count ? info.count : 1}
+            value={state.allPages}
+            max={state.info && state.info.count ? state.info.count : 1}
             onChange={(e) => changeAllPages(e)}
           />
           <label htmlFor="cardsPerPage">Cards per page</label>
@@ -288,7 +269,7 @@ export default function SearchBar() {
             id="cardsPerPage"
             min={1}
             max={20}
-            value={cardsPerPage}
+            value={state.cardsPerPage}
             onChange={(e) => changeCardsPerPage(e)}
           />
         </div>

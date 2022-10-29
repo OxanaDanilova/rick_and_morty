@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router';
 import './Header.css';
 
 interface Props {
@@ -6,5 +7,6 @@ interface Props {
 }
 
 export default function Header({ pageName }: Props) {
-  return <header>{pageName}</header>;
+  const { id } = useParams();
+  return <header>{id ? `${pageName}/${id}` : pageName}</header>;
 }
