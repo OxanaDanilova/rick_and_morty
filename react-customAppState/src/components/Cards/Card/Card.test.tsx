@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Card from './Card';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 describe('Check Card', () => {
   it('check rendering Card', () => {
@@ -17,7 +18,11 @@ describe('Check Card', () => {
       species: 'Human',
       status: 'Alive',
     };
-    render(<Card character={character} id={1} key={1} />);
+    render(
+      <Router>
+        <Card character={character} id={1} key={1} />
+      </Router>
+    );
 
     const card = screen.getByTestId('card');
     expect(card).toBeInTheDocument();

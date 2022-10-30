@@ -54,12 +54,4 @@ describe('Check Router', () => {
     );
     expect(screen.getByText('Home page')).toBeInTheDocument();
   });
-  it('check notFoundPage', () => {
-    render(
-      <MemoryRouter initialEntries={['/dfgdfgdfg']}>
-        <App />
-      </MemoryRouter>
-    );
-    expect(screen.getByText('Page not found')).toBeInTheDocument();
-  });
 });

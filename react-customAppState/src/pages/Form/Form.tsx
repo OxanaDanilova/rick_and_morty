@@ -36,7 +36,6 @@ export default function Form() {
 
   useEffect(() => {
     if (!state.initialForm) {
-      console.log('statefor', state.formValues);
       setValue('fname', state.formValues.fname);
       setValue('lname', state.formValues.lname);
       setValue('dob', state.formValues.dob);
@@ -69,7 +68,6 @@ export default function Form() {
         },
       });
     }
-    console.log('getValues', getValues);
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -91,14 +89,6 @@ export default function Form() {
         ],
       },
     });
-    /*    createCard({
-      firstName: data.fname,
-      lastName: data.lname,
-      birthday: data.dob,
-      country: data.country,
-      gender: data.gender ? 'Female' : 'Male',
-      avatar: userAvatar,
-    }); */
     setShowCreateMes(true);
     dispatch({
       type: 'initialForm',

@@ -69,6 +69,7 @@ export default function SearchBar() {
       }
     };
   }, []);
+
   const sortCards = (sorting: string, arr: Character[]) => {
     switch (sorting) {
       case 'Name A-Z': {
