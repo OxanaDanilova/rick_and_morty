@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useContext } from 'react';
 import { GoSearch } from 'react-icons/go';
 import './SearchBar.css';
 import { AppContext } from 'App';
+import Character from 'types';
 
 export default function SearchBar() {
   const myContext = useContext(AppContext);
@@ -30,11 +31,11 @@ export default function SearchBar() {
       if (!data.results) {
         throw new Error();
       } else {
-        dispatch({ type: 'search-cards', payload: { ...state, dataArr: data.results } });
+        dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...data.results] } });
         dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
-        dispatch({ type: 'unsorted-cards', payload: { ...state, dataArr: data.results } });
+        dispatch({ type: 'unsorted-cards', payload: { ...state, dataArr: [...data.results] } });
         if (state.sorting) {
-          sortCards(state.sorting);
+          sortCards(state.sorting, data.results);
         }
       }
     } catch (error) {
@@ -68,10 +69,10 @@ export default function SearchBar() {
       }
     };
   }, []);
-  const sortCards = (sorting: string) => {
+  const sortCards = (sorting: string, arr: Character[]) => {
     switch (sorting) {
       case 'Name A-Z': {
-        const sortedData = state.unsortedCards.sort((a, b) => {
+        const sortedData = arr.sort((a, b) => {
           if (a.name < b.name) {
             return -1;
           }
@@ -80,14 +81,14 @@ export default function SearchBar() {
           }
           return 0;
         });
-
+        console.log('sorted data', sortedData);
         dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
         dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
         break;
       }
 
       case 'Name Z-A': {
-        const sortedData = state.unsortedCards.sort((a, b) => {
+        const sortedData = arr.sort((a, b) => {
           if (a.name > b.name) {
             return -1;
           }
@@ -101,7 +102,7 @@ export default function SearchBar() {
         break;
       }
       case 'Species A-Z': {
-        const sortedData = state.unsortedCards.sort((a, b) => {
+        const sortedData = arr.sort((a, b) => {
           if (a.species < b.species) {
             return -1;
           }
@@ -116,7 +117,7 @@ export default function SearchBar() {
       }
 
       case 'Species Z-A': {
-        const sortedData = state.unsortedCards.sort((a, b) => {
+        const sortedData = arr.sort((a, b) => {
           if (a.species > b.species) {
             return -1;
           }
@@ -130,7 +131,7 @@ export default function SearchBar() {
         break;
       }
       case 'Status A-Z': {
-        const sortedData = state.unsortedCards.sort((a, b) => {
+        const sortedData = arr.sort((a, b) => {
           if (a.status < b.status) {
             return -1;
           }
@@ -146,7 +147,7 @@ export default function SearchBar() {
       }
 
       case 'Status Z-A': {
-        const sortedData = state.unsortedCards.sort((a, b) => {
+        const sortedData = arr.sort((a, b) => {
           if (a.status > b.status) {
             return -1;
           }
@@ -168,7 +169,7 @@ export default function SearchBar() {
     const target = e.target as HTMLSelectElement;
     if (target && target.value) {
       dispatch({ type: 'sorting', payload: { ...state, sorting: target.value } });
-      sortCards(target.value);
+      sortCards(target.value, state.unsortedCards);
     }
   };
 
