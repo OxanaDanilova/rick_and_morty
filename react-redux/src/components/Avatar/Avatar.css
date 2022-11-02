@@ -1,0 +1,14 @@
+.avatar-wrapper {
+  position: relative;
+  width: 50%;
+  margin: 1rem auto;
+}
+
+.avatar-wrapper > .er-mes {
+  color: red;
+  font-size: 0.9rem;
+  font-style: italic;
+  position: absolute;
+  top: 0.6rem;
+  left: 1rem;
+}

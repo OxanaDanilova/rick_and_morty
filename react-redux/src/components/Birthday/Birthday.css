@@ -1,0 +1,30 @@
+.birthdayWrapper {
+  width: 80%;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#dob {
+  min-width: 20rem;
+  height: 1.7rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  border: 1px solid royalblue;
+  box-shadow: 0.7rem 0.6rem 1rem #aaa;
+  padding-left: 0.8rem;
+}
+
+.bday-wrapper {
+  position: relative;
+}
+
+.er-mes {
+  color: red;
+  font-size: 0.9rem;
+  font-style: italic;
+  position: absolute;
+  top: 1.2rem;
+  left: 1rem;
+}
