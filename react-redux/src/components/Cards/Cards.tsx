@@ -1,16 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Card from './Card/Card';
 import './Cards.css';
-import Character from 'types';
-import { AppContext } from '../../App';
+import { Character, MyState } from 'types';
+//import { AppContext } from '../../App';
+
+import { useSelector } from 'react-redux';
 
 export default function Cards() {
-  const myContext = useContext(AppContext);
-  const { state } = myContext;
+  //const myContext = useContext(AppContext);
+  //const { state } = myContext;
+
+  const dataArr = useSelector((state: MyState) => state.dataArr);
+  const isLoading = useSelector((state: MyState) => state.isLoading);
+  const hasError = useSelector((state: MyState) => state.hasError);
 
   return (
     <div>
-      {state.isLoading ? (
+      {isLoading ? (
         <div id="load" data-testid="loading">
           <div>G</div>
           <div>N</div>
@@ -22,13 +28,13 @@ export default function Cards() {
         </div>
       ) : (
         <>
-          {state.hasError ? (
+          {hasError ? (
             <h3 className="api-error-mes">There are no matching cards for this request.</h3>
           ) : (
             <>
               <h3>Cards</h3>
               <ul className="cards" data-testid="cards">
-                {state.dataArr.map((character: Character, id: number) => (
+                {dataArr.map((character: Character, id: number) => (
                   <Card character={character} id={id} key={id} />
                 ))}
               </ul>

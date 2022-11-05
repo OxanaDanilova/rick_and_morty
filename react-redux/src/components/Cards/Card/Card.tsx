@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
-import Character from 'types';
+import { Character } from 'types';
 
 interface MyProps {
   character: Character;
