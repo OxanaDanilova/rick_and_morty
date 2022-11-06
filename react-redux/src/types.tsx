@@ -69,7 +69,7 @@ export interface MyAction {
   };
 }
 
-export interface MyState {
+export interface MyStateSearch {
   dataArr: Character[];
   hasError: boolean;
   isLoading: boolean;
@@ -79,6 +79,21 @@ export interface MyState {
   currentPage: number;
   cardsPerPage: number;
   allPages: number;
+  // formCards: FormCard[];
+  // formValues: FormValues;
+  // initialForm: boolean;
+}
+
+export interface MyStateForm {
+  // dataArr: Character[];
+  // hasError: boolean;
+  // isLoading: boolean;
+  // sorting: string;
+  // unsortedCards: Character[];
+  // info: Info | null;
+  // currentPage: number;
+  // cardsPerPage: number;
+  // allPages: number;
   formCards: FormCard[];
   formValues: FormValues;
   initialForm: boolean;

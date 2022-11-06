@@ -1,4 +1,4 @@
-import { Character, FormValues, FormCard, Info, MyState } from 'types';
+import { Character, FormValues, FormCard, Info, MyStateSearch } from 'types';
 
 import axios from 'axios';
 
@@ -19,12 +19,12 @@ export const unsortedCards = (unsortedCards: Character[]) => {
 };
 
 // { type: 'hasError', payload: { ...state, hasError: false } };
-export const hasError = (error: boolean) => {
+/* export const hasError = (error: boolean) => {
   return {
     type: 'search-cards',
     payload: { hasError: error },
   };
-};
+}; */
 
 //{ type: 'isLoading', payload: { ...state, isLoading: false } }
 export const isLoading = (isLoading: boolean) => {
@@ -97,29 +97,21 @@ export const info = (info: Info | null) => {
   };
 };
 
-//  dispatch({ type: 'currentPage', payload: { ...state, currentPage: state.currentPage - 1 } });
-export const currentPage = (currentPage: number) => {
-  return {
-    type: 'currentPage',
-    payload: currentPage,
-  };
-};
-
 //   dispatch({ type: 'cardsPerPage', payload: { ...state, cardsPerPage: +target.value } });
-export const cardsPerPage = (cardsPerPage: number) => {
+/* export const cardsPerPage = (cardsPerPage: number) => {
   return {
     type: 'cardsPerPage',
     payload: cardsPerPage,
   };
-};
+}; */
 
 //dispatch({ type: 'allPages', payload: { ...state, allPages: data.info.pages } });
-export const allPages = (allPages: number) => {
+/* export const allPages = (allPages: number) => {
   return {
     type: 'allPages',
     payload: allPages,
   };
-};
+}; */
 
 //dispatch({ type: 'allPages', payload: { ...state, allPages: data.info.pages } });
 export const formCards = (formCards: FormCard[]) => {

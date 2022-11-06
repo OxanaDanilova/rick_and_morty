@@ -1,71 +1,54 @@
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { GoSearch } from 'react-icons/go';
 import './SearchBar.css';
-//import { AppContext } from 'App';
-import { Character, MyState, FormValues, FormCard, Info, MyAction } from 'types';
-
-import { useSelector, useDispatch } from 'react-redux';
+import { Character, MyStateSearch, MyStateForm } from 'types';
+import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'hook';
 
 import {
   searchCards,
-  unsortedCards,
-  hasError,
-  isLoading,
-  sorting,
-  info,
-  currentPage,
-  cardsPerPage,
-  allPages,
-} from '../../action';
+  setError,
+  setSorting,
+  setCurrentPage,
+  setCardsPerPage,
+  setAllPages,
+} from '../../cardsSlice';
 import { fetchCards } from 'cardsSlice';
 
 export default function SearchBar() {
-  //const myContext = useContext(AppContext);
-  //const { state, dispatch } = myContext;
-
-  const dataArr = useSelector((state: MyState) => state.dataArr);
+  const dataArr = useSelector(
+    (state: { cards: MyStateSearch; form: MyStateForm }) => state.cards.dataArr
+  );
+  const info = useSelector(
+    (state: { cards: MyStateSearch; form: MyStateForm }) => state.cards.info
+  );
+  const currentPage = useSelector(
+    (state: { cards: MyStateSearch; form: MyStateForm }) => state.cards.currentPage
+  );
+  const allPages = useSelector(
+    (state: { cards: MyStateSearch; form: MyStateForm }) => state.cards.allPages
+  );
+  const cardsPerPage = useSelector(
+    (state: { cards: MyStateSearch; form: MyStateForm }) => state.cards.cardsPerPage
+  );
+  const sorting = useSelector(
+    (state: { cards: MyStateSearch; form: MyStateForm }) => state.cards.sorting
+  );
+  const unsortedCards = useSelector(
+    (state: { cards: MyStateSearch; form: MyStateForm }) => state.cards.unsortedCards
+  );
   const dispatch = useAppDispatch();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // const paginationHandle = (direction: string) => {
-  //   if (state.info && direction === 'next' && state.info.next) {
-  //     dispatch({ type: 'currentPage', payload: { ...state, currentPage: state.currentPage + 1 } });
-  //     getDataFromApi(state.info.next);
-  //   } else if (state.info && direction === 'prev' && state.info.prev) {
-  //     dispatch({ type: 'currentPage', payload: { ...state, currentPage: state.currentPage - 1 } });
-  //     getDataFromApi(state.info.prev);
-  //   }
-  // };
-
-  const getDataFromApi = async (url: string) => {
-    //////////////////////////   try {
-    //dispatch({ type: 'isLoading', payload: { ...state, isLoading: true } });
-    const response = await fetch(url);
-    const data = await response.json();
-    // dispatch({ type: 'info', payload: { ...state, info: data.info } });
-    //  dispatch({ type: 'allPages', payload: { ...state, allPages: data.info.pages } });
-    //  dispatch({ type: 'isLoading', payload: { ...state, isLoading: false } });
-    if (!data.results) {
-      throw new Error();
-    } else {
-      ///dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...data.results] } });
-      dispatch(searchCards([...data.results]));
-      // dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
-      dispatch(hasError(false));
-      // dispatch({ type: 'unsorted-cards', payload: { ...state, dataArr: [...data.results] } });
-      ///////////////////       dispatch(unsortedCards([...data.results]));
-      /*     if (state.sorting) {
-          sortCards(state.sorting, data.results);
-        } */
+  const paginationHandle = (direction: string) => {
+    if (info && direction === 'next' && info.next) {
+      dispatch(setCurrentPage(currentPage + 1));
+      dispatch(fetchCards(info.next));
+    } else if (info && direction === 'prev' && info.prev) {
+      dispatch(setCurrentPage(currentPage - 1));
+      dispatch(fetchCards(info.prev));
     }
-    // } catch (error) {
-    //   //dispatch({ type: 'search-cards', payload: { ...state, dataArr: [] } });
-    //   dispatch(searchCards([]));
-    //   //dispatch({ type: 'hasError', payload: { ...state, hasError: true } });
-    //   dispatch(hasError(true));
-    // }
   };
 
   const submitForm = async (e: React.FormEvent) => {
@@ -74,9 +57,14 @@ export default function SearchBar() {
       dispatch(
         fetchCards(`https://rickandmortyapi.com/api/character/?name=${inputRef.current.value}`)
       );
-      //getDataFromApi(`https://rickandmortyapi.com/api/character/?name=${inputRef.current.value}`);
     }
   };
+
+  useEffect(() => {
+    if (sorting) {
+      sortCards(sorting, unsortedCards);
+    }
+  }, [unsortedCards]);
 
   useEffect(() => {
     const localStorageData = localStorage.getItem('searchItem');
@@ -85,14 +73,9 @@ export default function SearchBar() {
       searchItem.value = localStorageData;
       if (!dataArr.length) {
         dispatch(fetchCards(`https://rickandmortyapi.com/api/character/?name=${localStorageData}`));
-
-        //const lastReturnedAction = await store.dispatch(fetchCards(url));
-
-        //getDataFromApi(`https://rickandmortyapi.com/api/character/?name=${localStorageData}`);
       }
     } else {
       dispatch(fetchCards(`https://rickandmortyapi.com/api/character`));
-      //getDataFromApi();
     }
 
     return () => {
@@ -102,147 +85,146 @@ export default function SearchBar() {
     };
   }, []);
 
-  // const sortCards = (sorting: string, arr: Character[]) => {
-  //   switch (sorting) {
-  //     case 'Name A-Z': {
-  //       const sortedData = arr.sort((a, b) => {
-  //         if (a.name < b.name) {
-  //           return -1;
-  //         }
-  //         if (a.name > b.name) {
-  //           return 1;
-  //         }
-  //         return 0;
-  //       });
-  //       console.log('sorted data', sortedData);
-  //       dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
-  //       dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
-  //       break;
-  //     }
+  const sortCards = (sorting: string, arr: Character[]) => {
+    switch (sorting) {
+      case 'Name A-Z': {
+        const sortedData = [...arr].sort((a, b) => {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
+        dispatch(searchCards([...sortedData]));
+        dispatch(setError(false));
+        break;
+      }
 
-  //     case 'Name Z-A': {
-  //       const sortedData = arr.sort((a, b) => {
-  //         if (a.name > b.name) {
-  //           return -1;
-  //         }
-  //         if (a.name > b.name) {
-  //           return 1;
-  //         }
-  //         return 0;
-  //       });
-  //       dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
-  //       dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
-  //       break;
-  //     }
-  //     case 'Species A-Z': {
-  //       const sortedData = arr.sort((a, b) => {
-  //         if (a.species < b.species) {
-  //           return -1;
-  //         }
-  //         if (a.species > b.species) {
-  //           return 1;
-  //         }
-  //         return 0;
-  //       });
-  //       dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
-  //       dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
-  //       break;
-  //     }
+      case 'Name Z-A': {
+        const sortedData = [...arr].sort((a, b) => {
+          if (a.name > b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
+        dispatch(searchCards([...sortedData]));
+        dispatch(setError(false));
+        break;
+      }
+      case 'Species A-Z': {
+        const sortedData = [...arr].sort((a, b) => {
+          if (a.species < b.species) {
+            return -1;
+          }
+          if (a.species > b.species) {
+            return 1;
+          }
+          return 0;
+        });
+        dispatch(searchCards([...sortedData]));
+        dispatch(setError(false));
+        break;
+      }
 
-  //     case 'Species Z-A': {
-  //       const sortedData = arr.sort((a, b) => {
-  //         if (a.species > b.species) {
-  //           return -1;
-  //         }
-  //         if (a.species > b.species) {
-  //           return 1;
-  //         }
-  //         return 0;
-  //       });
-  //       dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
-  //       dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
-  //       break;
-  //     }
-  //     case 'Status A-Z': {
-  //       const sortedData = arr.sort((a, b) => {
-  //         if (a.status < b.status) {
-  //           return -1;
-  //         }
-  //         if (a.status > b.status) {
-  //           return 1;
-  //         }
-  //         return 0;
-  //       });
+      case 'Species Z-A': {
+        const sortedData = [...arr].sort((a, b) => {
+          if (a.species > b.species) {
+            return -1;
+          }
+          if (a.species > b.species) {
+            return 1;
+          }
+          return 0;
+        });
+        dispatch(searchCards([...sortedData]));
+        dispatch(setError(false));
+        break;
+      }
+      case 'Status A-Z': {
+        const sortedData = [...arr].sort((a, b) => {
+          if (a.status < b.status) {
+            return -1;
+          }
+          if (a.status > b.status) {
+            return 1;
+          }
+          return 0;
+        });
 
-  //       dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
-  //       dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
-  //       break;
-  //     }
+        dispatch(searchCards([...sortedData]));
+        dispatch(setError(false));
+        break;
+      }
 
-  //     case 'Status Z-A': {
-  //       const sortedData = arr.sort((a, b) => {
-  //         if (a.status > b.status) {
-  //           return -1;
-  //         }
-  //         if (a.status > b.status) {
-  //           return 1;
-  //         }
-  //         return 0;
-  //       });
-  //       dispatch({ type: 'search-cards', payload: { ...state, dataArr: [...sortedData] } });
-  //       dispatch({ type: 'hasError', payload: { ...state, hasError: false } });
-  //       break;
-  //     }
-  //     default:
-  //       break;
-  //   }
-  // };
+      case 'Status Z-A': {
+        const sortedData = [...arr].sort((a, b) => {
+          if (a.status > b.status) {
+            return -1;
+          }
+          if (a.status > b.status) {
+            return 1;
+          }
+          return 0;
+        });
+        dispatch(searchCards([...sortedData]));
+        dispatch(setError(false));
+        break;
+      }
+      default:
+        break;
+    }
+  };
 
-  // const handleSort = (e: React.FormEvent) => {
-  //   const target = e.target as HTMLSelectElement;
-  //   if (target && target.value) {
-  //     dispatch({ type: 'sorting', payload: { ...state, sorting: target.value } });
-  //     sortCards(target.value, state.unsortedCards);
-  //   }
-  // };
+  const handleSort = (e: React.FormEvent) => {
+    const target = e.target as HTMLSelectElement;
+    if (target && target.value) {
+      dispatch(setSorting(target.value));
+      sortCards(target.value, unsortedCards);
+    }
+  };
 
-  // const changeCardsPerPage = (e: React.FormEvent) => {
-  //   const target = e.target as HTMLInputElement;
-  //   if (target.value) {
-  //     dispatch({ type: 'cardsPerPage', payload: { ...state, cardsPerPage: +target.value } });
-  //     const calcAllPages = state.info && Math.ceil(state.info.count / +target.value);
-  //     calcAllPages && dispatch({ type: 'allPages', payload: { ...state, allPages: calcAllPages } });
-  //     const newArrNumb = [];
-  //     for (let i = 1; i <= state.cardsPerPage; i++) {
-  //       const newItem = state.cardsPerPage * (state.currentPage - 1) + i;
-  //       newArrNumb.push(newItem);
-  //     }
-  //     console.log(newArrNumb);
-  //   }
-  // };
-  // const changeAllPages = (e: React.FormEvent) => {
-  //   const target = e.target as HTMLInputElement;
-  //   if (target.value) {
-  //     dispatch({ type: 'allPages', payload: { ...state, allPages: +target.value } });
-  //     const calcCardsPerPage = state.info && Math.ceil(state.info.count / +target.value);
-  //     calcCardsPerPage &&
-  //       dispatch({ type: 'cardsPerPage', payload: { ...state, cardsPerPage: calcCardsPerPage } });
-  //   }
-  // };
+  const changeCardsPerPage = (e: React.FormEvent) => {
+    const target = e.target as HTMLInputElement;
+    if (target.value) {
+      dispatch(setCardsPerPage(+target.value));
+      const calcAllPages = info && Math.ceil(info.count / +target.value);
+      calcAllPages && dispatch(setAllPages(calcAllPages));
+      const newArrNumb = [];
+      for (let i = 1; i <= cardsPerPage; i++) {
+        const newItem = cardsPerPage * (currentPage - 1) + i;
+        newArrNumb.push(newItem);
+      }
+    }
+  };
+  const changeAllPages = (e: React.FormEvent) => {
+    const target = e.target as HTMLInputElement;
+    if (target.value) {
+      dispatch(setAllPages(+target.value));
+      const calcCardsPerPage = info && Math.ceil(info.count / +target.value);
+      calcCardsPerPage && dispatch(setCardsPerPage(calcCardsPerPage));
+    }
+  };
 
-  // const changeCurrentPage = (e: React.FormEvent) => {
-  //   const target = e.target as HTMLInputElement;
-  //   if (target.value) {
-  //     dispatch({ type: 'currentPage', payload: { ...state, currentPage: +target.value } });
-  //     if (inputRef.current) {
-  //       getDataFromApi(
-  //         `https://rickandmortyapi.com/api/character/?page=${+target.value}&name=${
-  //           inputRef.current.value
-  //         }`
-  //       );
-  //     }
-  //   }
-  // };
+  const changeCurrentPage = (e: React.FormEvent) => {
+    const target = e.target as HTMLInputElement;
+    if (target.value) {
+      dispatch(setCurrentPage(+target.value));
+      if (inputRef.current) {
+        dispatch(
+          fetchCards(
+            `https://rickandmortyapi.com/api/character/?page=${+target.value}&name=${
+              inputRef.current.value
+            }`
+          )
+        );
+      }
+    }
+  };
 
   return (
     <>
@@ -250,10 +232,10 @@ export default function SearchBar() {
         <GoSearch className="search-icon" />
         <input type="text" name="search" ref={inputRef} placeholder="Search" />
       </form>
-      {/*       <section className="panel-wrapper">
+      <section className="panel-wrapper">
         <div className="sorting-wrapper">
           <label htmlFor="sort">Sorting by</label>
-          <select id="sort" onChange={(e) => handleSort(e)} value={state.sorting}>
+          <select id="sort" onChange={(e) => handleSort(e)} value={sorting}>
             <option></option>
             <option>Name A-Z</option>
             <option>Name Z-A</option>
@@ -265,7 +247,7 @@ export default function SearchBar() {
         </div>
         <div className="pagination-wrapper">
           <button
-            disabled={state.info && state.info.prev ? false : true}
+            disabled={info && info.prev ? false : true}
             onClick={() => paginationHandle('prev')}
           >
             Prev
@@ -274,13 +256,13 @@ export default function SearchBar() {
             type="number"
             name="currentPage"
             id="currentPage"
-            value={state.currentPage}
-            max={state.allPages}
+            value={currentPage}
+            max={allPages}
             min={1}
             onChange={(e) => changeCurrentPage(e)}
           />
           <button
-            disabled={state.info && state.info.next ? false : true}
+            disabled={info && info.next ? false : true}
             onClick={() => paginationHandle('next')}
           >
             Next
@@ -292,8 +274,8 @@ export default function SearchBar() {
             type="number"
             id="allPages"
             name="allPages"
-            value={state.allPages}
-            max={state.info && state.info.count ? state.info.count : 1}
+            value={allPages}
+            max={info && info.count ? info.count : 1}
             onChange={(e) => changeAllPages(e)}
           />
           <label htmlFor="cardsPerPage">Cards per page</label>
@@ -303,11 +285,11 @@ export default function SearchBar() {
             id="cardsPerPage"
             min={1}
             max={20}
-            value={state.cardsPerPage}
+            value={cardsPerPage}
             onChange={(e) => changeCardsPerPage(e)}
           />
         </div>
-      </section> */}
+      </section>
     </>
   );
 }

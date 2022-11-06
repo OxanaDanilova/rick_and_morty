@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import cardsReducer from './cardsSlice';
+import formReducer from './formSlice';
 
 const store = configureStore({
-  reducer: cardsReducer,
+  reducer: { cards: cardsReducer, form: formReducer },
 });
 
 export default store;
