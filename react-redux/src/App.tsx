@@ -6,7 +6,7 @@ import NotFound from './pages/NotFound/NotFound';
 import './App.css';
 //import FormPage from 'pages/Form/FormPage';
 //import { Character, MyState } from 'types';
-//import CardPage from 'components/Cards/Card/CardPage/CardPage';
+import CardPage from 'components/Cards/Card/CardPage/CardPage';
 
 // export type GlobalContent = {
 //   state: {
@@ -144,8 +144,8 @@ function App() {
       </nav>
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* <Route path="/:id" element={<CardPage />} />
-        <Route path="/form" element={<FormPage />} /> */}
+        <Route path="/:id" element={<CardPage />} />
+        {/* <Route path="/form" element={<FormPage />} /> */}
         <Route path="/about" element={<About />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>
