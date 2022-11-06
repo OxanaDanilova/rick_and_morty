@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Character, FormValues, FormCard, Info, MyStateSearch as MyState } from 'types';
+import { Character, Info, MyStateSearch as MyState } from 'types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 type FetchError = {
@@ -38,17 +38,6 @@ const initialState = {
   currentPage: 1,
   cardsPerPage: 20,
   allPages: 1,
-  // formCards: [],
-  // formValues: {
-  //   fname: '',
-  //   lname: '',
-  //   dob: '',
-  //   country: '',
-  //   gender: '',
-  //   avatar: null,
-  //   agreement: '',
-  // },
-  // initialForm: true,
 };
 
 //export const selectStatus = (state: MyState) => state.todos.status;
@@ -87,13 +76,12 @@ const cardsSlice = createSlice({
           state.unsortedCards = [...payload.results];
           state.isLoading = false;
           state.hasError = false;
-          console.log(payload);
           state.info = { ...payload.info };
           state.allPages = payload.info.pages;
           state.dataArr = [...payload.results];
         }
       )
-      .addCase(fetchCards.rejected, (state, action) => {
+      .addCase(fetchCards.rejected, (state) => {
         state.isLoading = false;
         state.hasError = true;
         state.dataArr = [];

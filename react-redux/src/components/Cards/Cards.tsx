@@ -2,14 +2,9 @@ import React from 'react';
 import Card from './Card/Card';
 import './Cards.css';
 import { Character, MyStateSearch, MyStateForm } from 'types';
-//import { AppContext } from '../../App';
-
 import { useSelector } from 'react-redux';
 
 export default function Cards() {
-  //const myContext = useContext(AppContext);
-  //const { state } = myContext;
-
   const dataArr = useSelector(
     (state: { cards: MyStateSearch; form: MyStateForm }) => state.cards.dataArr
   );
@@ -19,7 +14,6 @@ export default function Cards() {
   const hasError = useSelector(
     (state: { cards: MyStateSearch; form: MyStateForm }) => state.cards.hasError
   );
-  console.log(dataArr);
   return (
     <div>
       {isLoading ? (

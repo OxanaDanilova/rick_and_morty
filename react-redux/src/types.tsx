@@ -79,21 +79,9 @@ export interface MyStateSearch {
   currentPage: number;
   cardsPerPage: number;
   allPages: number;
-  // formCards: FormCard[];
-  // formValues: FormValues;
-  // initialForm: boolean;
 }
 
 export interface MyStateForm {
-  // dataArr: Character[];
-  // hasError: boolean;
-  // isLoading: boolean;
-  // sorting: string;
-  // unsortedCards: Character[];
-  // info: Info | null;
-  // currentPage: number;
-  // cardsPerPage: number;
-  // allPages: number;
   formCards: FormCard[];
   formValues: FormValues;
   initialForm: boolean;
