@@ -1,0 +1,57 @@
+#createCardForm {
+  width: 30vw;
+  min-width: 300px;
+  margin: 2rem auto;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid #2196f3;
+  box-shadow: 0.5rem 0.5rem 0.5rem cadetblue;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.formCardsWrapper {
+  width: 80%;
+  margin: 1rem auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.createCardMes {
+  width: 80%;
+  margin: 0.5rem auto;
+  color: royalblue;
+  font-weight: 600;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.panelButtons {
+  width: 80%;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.panelButtons > input {
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+input[type='submit'] {
+  background-color: royalblue;
+  color: azure;
+}
+
+input[type='submit']:disabled {
+  background-color: unset;
+  color: royalblue;
+  cursor: default;
+}
