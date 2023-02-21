@@ -11,7 +11,7 @@ import store from './store';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <Router basename="/rick_and_morty/react-redux">
+    <Router basename="/rick_and_morty">
       <Provider store={store}>
         <App />
       </Provider>
