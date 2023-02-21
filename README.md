@@ -2,7 +2,7 @@
 
 _**Rick and Morty** is based on the Rick and Morty API. With this APP you can find all cards related to Rick and Morty, or create your own cards with the appropriate form._
 
-[Demo](https://oxanadanilova.github.io/rick_and_morty/react-redux)
+[Demo](https://oxanadanilova.github.io/rick_and_morty/)
 
 ---
 
