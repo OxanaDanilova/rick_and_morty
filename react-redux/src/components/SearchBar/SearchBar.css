@@ -33,7 +33,7 @@
 .panel-wrapper {
   display: flex;
   flex-wrap: wrap;
-  width: 90%;
+  width: 50%;
   min-width: 300px;
   margin: 1rem auto;
   justify-content: space-between;

@@ -268,7 +268,7 @@ export default function SearchBar() {
             Next
           </button>
         </div>
-        <div>
+        {/*  <div>
           <label htmlFor="allPages">All pages</label>
           <input
             type="number"
@@ -288,7 +288,7 @@ export default function SearchBar() {
             value={cardsPerPage}
             onChange={(e) => changeCardsPerPage(e)}
           />
-        </div>
+        </div> */}
       </section>
     </>
   );
