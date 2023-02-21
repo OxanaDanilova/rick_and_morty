@@ -1,6 +1,6 @@
 # Project name: Rick and Morty
 
-_**Rick and Morty** is created based on the API Rick and Morty. With this APP you can find all cards related to Rick and Morty or create own cards with appropriate form._
+_**Rick and Morty** is based on the Rick and Morty API. With this APP you can find all cards related to Rick and Morty, or create your own cards with the appropriate form._
 
 [Demo](https://oxanadanilova.github.io/rick_and_morty/react-redux)
 
