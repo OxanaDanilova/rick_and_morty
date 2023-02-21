@@ -12,13 +12,6 @@ _**Rick and Morty** is based on the Rick and Morty API. With this APP you can fi
 
 ---
 
-## Description
-
-This is the [Rolling Scopes School](https://rs.school/index.html) studing project.
-It was designed by Alisa Samborskaya ([design in Figma](https://www.figma.com/file/jfEFwkXVj1WRq7sUHDr8os/PetStory-online?node-id=0%3A1)) and developed by [Oxana Danilova](https://github.com/OxanaDanilova)
-
----
-
 ## Technologies
 
 HTML5,CSS, JavaScript, React, TypeScript, Flexbox Layout, React Router v6, Redux, React Testing Library
