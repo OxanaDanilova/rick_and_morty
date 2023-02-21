@@ -1,0 +1,25 @@
+.panelButtons {
+  width: 80%;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.panelButtons > input {
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+input[type='submit'] {
+  background-color: royalblue;
+  color: azure;
+}
+
+input[type='submit']:disabled {
+  background-color: unset;
+  color: royalblue;
+  cursor: default;
+}
